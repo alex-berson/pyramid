@@ -1,0 +1,115 @@
+@font-face {
+    font-family: 'Roboto Slab';
+    src: url(../fonts/RobotoSlab-Regular-webfont.woff);
+}
+
+@font-face {
+    font-family: 'Roboto Slab';
+    src: url(../fonts/RobotoSlab-Bold-webfont.woff);
+    font-weight: bold;
+}
+
+:root {
+    --board-size: 0.87;
+   
+    --background-color: #214f11;
+   
+}
+
+#outer {
+    display: table;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+}
+  
+#middle {
+    display: table-cell;
+    vertical-align: middle;
+}
+  
+#inner {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+body{
+    font-family: 'Roboto Slab', serif;
+    background-color: var(--background-color);
+
+}
+
+/* h1{
+    display: inline-block;
+    text-align: center;
+
+    margin: 0;
+    font-size: 90px;
+    color: white;
+    transition: color 1s ease-in-out;  
+    margin-bottom: 100px;
+} */
+
+.board {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    width: 365px;
+    height: 441px;
+
+    height: 350px;
+
+    /* background-color: black; */
+    margin: auto;
+    /* margin-top: 100px; */
+
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center; 
+    width: 365px;
+    height: 63px;
+    /* margin-top: -30px; */
+
+    /* background-color: red; */
+}
+
+.row:not(:first-child) {
+    margin-top: -30px;
+}
+
+.row:last-child {
+    margin-top: 20px;
+}
+
+.card {
+
+    box-sizing: border-box;
+    width: 48px;
+    height: 63px;
+    margin-left: 2px;
+    margin-right: 2px;
+    background-color: white;
+    border: 1px solid gainsboro;
+    border-radius: 4px;
+}
+
+.row:last-child .card:last-child {
+    margin-left: 15px;
+}
+
+
+.noselect {
+    -webkit-tap-highlight-color: transparent;
+        -webkit-touch-callout: none;
+            -webkit-user-select: none; 
+            -moz-user-select: none; 
+                -ms-user-select: none; 
+                    user-select: none; 
+}
+ 
