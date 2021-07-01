@@ -1,18 +1,29 @@
 @font-face {
     font-family: 'Roboto Slab';
-    src: url(../fonts/RobotoSlab-Regular-webfont.woff);
+    src: url(../fonts/RobotoSlab-Regular.ttf);
 }
 
 @font-face {
     font-family: 'Roboto Slab';
-    src: url(../fonts/RobotoSlab-Bold-webfont.woff);
+    src: url(../fonts/RobotoSlab-Bold.ttf);
     font-weight: bold;
+}
+
+@font-face {
+    font-family: 'Card Characters';
+    src: url(../fonts/CardCharacters.ttf);
 }
 
 :root {
     --board-size: 0.87;
    
     --background-color: #214f11;
+
+    --board-height: 350px;
+    --board-width: 365px;
+    --card-height: 65px;
+    --card-width: 46px;
+
    
 }
 
@@ -36,7 +47,13 @@
 }
 
 body{
-    font-family: 'Roboto Slab', serif;
+    /* font-family: 'Roboto Slab', serif; */
+
+    font-family: "Hiragino Sans W6";
+
+
+
+
     background-color: var(--background-color);
 
 }
@@ -56,10 +73,9 @@ body{
     display: flex;
     position: relative;
     flex-direction: column;
-    width: 365px;
-    height: 441px;
+    width: var(--board-width);
 
-    height: 350px;
+    height: var(--board-height);
 
     /* background-color: black; */
     margin: auto;
@@ -72,15 +88,15 @@ body{
     flex-direction: row;
     align-items: center;
     justify-content: center; 
-    width: 365px;
-    height: 63px;
-    /* margin-top: -30px; */
+    width: var(--board-width);
+    height: var(--card-height);
+
 
     /* background-color: red; */
 }
 
 .row:not(:first-child) {
-    margin-top: -30px;
+    margin-top: calc(var(--card-height) / 2 * -1);
 }
 
 .row:last-child {
@@ -88,15 +104,67 @@ body{
 }
 
 .card {
-
-    box-sizing: border-box;
-    width: 48px;
-    height: 63px;
+    display: flex;
+    flex-direction: column;
+    width: var(--card-width);
+    height: var(--card-height);
+    /* padding: 1px; */
     margin-left: 2px;
     margin-right: 2px;
     background-color: white;
-    border: 1px solid gainsboro;
+    border: 1px solid rgba(0,0,0,0.05);
     border-radius: 4px;
+
+    /* color: red; */
+
+}
+
+.top{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: calc(var(--card-width));
+
+    width: calc(var(--card-width));
+
+    height: calc(var(--card-height) / 3);
+    /* font-size: 16px; */
+    /* color: red; */
+    font-weight: bold;
+
+}
+
+.rank{
+    font-family: "Roboto Slab";
+
+    /* font-family: "Card Characters"; */
+    font-weight: bold;
+
+    letter-spacing: -0.1em;
+
+    font-size: 24px;
+    /* line-height: 80%; */
+}
+
+.suit{
+
+    font-size: 20px;
+
+}
+
+.main{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: calc(var(--card-width));
+    height: calc(var(--card-height) / 3 * 2);
+    font-size: 40px;
+    /* color: red; */
+
+    /* font-family: "Card Characters";
+    font-weight: normal; */
+
 }
 
 .row:last-child .card:last-child {
