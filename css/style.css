@@ -1,3 +1,5 @@
+@import url("flip.css");
+
 @font-face {
     font-family: 'Roboto Slab';
     src: url(../fonts/RobotoSlab-Regular.ttf);
@@ -77,8 +79,10 @@ body{
 
     height: var(--board-height);
 
-    /* background-color: black; */
     margin: auto;
+
+
+    /* background-color: black; */
     /* margin-top: 100px; */
 
 }
@@ -99,11 +103,17 @@ body{
     margin-top: calc(var(--card-height) / 2 * -1);
 }
 
-.row:last-child {
+.row:nth-child(8){
     margin-top: 20px;
 }
 
-.card {
+.card-wrap{
+    position: absolute;
+    opacity: 0;
+}
+
+.front {
+    position: absolute;
     display: flex;
     flex-direction: column;
     width: var(--card-width);
@@ -115,8 +125,25 @@ body{
     border: 1px solid rgba(0,0,0,0.05);
     border-radius: 4px;
 
-    /* color: red; */
 
+    opacity: 1;
+}
+
+.back {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    width: calc(var(--card-width) - 2px);
+    height: calc(var(--card-height) - 2px);
+    /* padding: 1px; */
+    margin-left: 2px;
+    margin-right: 2px;
+    background-color: white;
+    border: 1px solid rgba(0,0,0,0.05);
+    border-radius: 4px;
+
+
+    opacity: 1;
 }
 
 .top{
@@ -124,8 +151,6 @@ body{
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    width: calc(var(--card-width));
-
     width: calc(var(--card-width));
 
     height: calc(var(--card-height) / 3);
@@ -167,9 +192,74 @@ body{
 
 }
 
+/* .back .card{
+    background: steelblue;
+} */
+
+.back {
+    /* padding: 2px;
+    background: steelblue; */
+
+    padding: 1px;
+    background-image:
+      linear-gradient(to bottom,
+        /* rgba(255, 255, 255, 1) 0%,
+        rgba(255, 255, 255, 1) 100%), */
+
+        salmon 0%,
+        salmon 100%),
+      linear-gradient(to bottom,
+        white 0%,
+        white 100%);
+    background-clip: content-box, padding-box;
+}
+
+.cell{
+
+    display: flex;
+    width: var(--card-width);
+    height: var(--card-height);
+    margin-left: 2px;
+    margin-right: 2px;
+    background-color: #143709;
+    border: 1px solid rgba(256,256,256, 0.1);
+    border-radius: 4px;
+
+    opacity: 0;
+}
+
+.stock {
+
+    width: var(--card-width);
+    height: var(--card-height);
+    margin-left: 2px;
+    margin-right: 2px;
+    background-color: #143709;
+    border: 1px solid rgba(256,256,256, 0.1);
+    border-radius: 4px;
+
+    /* opacity: 0; */
+
+}
+
+.pile {
+
+    width: var(--card-width);
+    height: var(--card-height);
+    margin-left: 27px;
+    margin-right: 2px;
+    background-color: #143709;
+    border: 1px solid rgba(256,256,256, 0.1);
+    border-radius: 4px;
+
+    /* opacity: 0; */
+
+}
+
+/* 
 .row:last-child .card:last-child {
     margin-left: 15px;
-}
+} */
 
 
 .noselect {
