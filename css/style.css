@@ -104,7 +104,7 @@ body{
 }
 
 .row:nth-child(8){
-    margin-top: 20px;
+    margin-top: 40px;
 }
 
 .card-wrap{
@@ -256,11 +256,18 @@ body{
 
 }
 
-/* 
-.row:last-child .card:last-child {
-    margin-left: 15px;
-} */
+@keyframes scaling {
+    0% {
+        transform: scale(1.0);
+    }
+    100% {
+        transform: scale(1.1);
+    }
+}
 
+.zoom {
+    animation: scaling 0.25s 2 linear forwards alternate;
+}
 
 .noselect {
     -webkit-tap-highlight-color: transparent;

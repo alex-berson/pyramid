@@ -1,9 +1,5 @@
 :root{
-    --duration: 1.2s 0.3s;
-
-    --duration: 0s;
-
-
+    --duration: 0.7s;
 }
 
 .card-wrap {

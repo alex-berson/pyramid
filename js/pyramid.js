@@ -1,17 +1,36 @@
 let cards = [];
+const pyramidSize = 28;
+const deckSize = 52;
+let generator = zIndex();
 
-const flipCard = () => {
+function* zIndex() {
+    var index = 0;
+    while(true)
+        yield index++;
+}
 
-    document.querySelector(".card-wrap").classList.toggle("flip");
-    document.querySelector(".card-wrap").style.transition = `all 0.4s ease-in-out`;
+const flipCard = (card) => {
 
-    // document.querySelector(".card-wrap").style.transform = "translate(73px, 0px)";
+    let pileCell = document.querySelector(".pile");
 
+    let offsetLeft = pileCell.offsetLeft - card.offsetLeft;
+
+    let offsetTop = pileCell.offsetTop - card.offsetTop;
+
+    card.style.zIndex = generator.next().value;
+
+    card.querySelector(".card").classList.add("zoom");
+
+    card.classList.toggle("flip");
+
+    card.style.transition = `all 0.4s 0.05s linear`;
+
+    card.style.transform = `translate(${offsetLeft - 2}px, ${offsetTop}px)`;
 }
 
 const fillPyramid = (topCell, cards, delay, interval) => {
 
-    for (let i = 0; i < 28; i++) {
+    for (let i = 0; i < pyramidSize; i++) {
 
         delay += interval;
 
@@ -28,11 +47,19 @@ const fillPyramid = (topCell, cards, delay, interval) => {
 
         let offsetTop = cell.offsetTop - card.offsetTop;
 
-        let distance = Math.sqrt(Math.pow(offsetLeft, 2) + Math.pow(offsetTop, 2));
+        // let distance = Math.sqrt(Math.pow(offsetLeft, 2) + Math.pow(offsetTop, 2));
 
-        let duration = distance / 550 / 2;
+        // let duration = distance / 550 / 2;
+
+        duration = 0.5;
 
         card.style.opacity = 1;
+
+        card.querySelectorAll(".front, .back").forEach(card => {
+
+            card.style.transition = `all ${duration - 0.2}s ${delay + 0.2}s linear`;
+
+        })
 
         card.style.transition = `all ${duration}s ${delay}s linear`;
 
@@ -46,7 +73,7 @@ const fillStock = (topCell, cards, delay, interval) => {
 
     let stockCell = document.querySelector(".stock");
 
-    for (let i = 28; i < 52; i++) {
+    for (let i = pyramidSize; i < deckSize; i++) {
 
         delay += 0.05;
 
@@ -60,9 +87,11 @@ const fillStock = (topCell, cards, delay, interval) => {
 
         let offsetTop = stockCell.offsetTop - card.offsetTop;
 
-        let distance = Math.sqrt(Math.pow(offsetLeft, 2) + Math.pow(offsetTop, 2));
+        // let distance = Math.sqrt(Math.pow(offsetLeft, 2) + Math.pow(offsetTop, 2));
 
-        let duration = distance / 550 / 1.1;
+        // let duration = distance / 550 / 1.1;
+
+        duration = 0.5;
 
         card.style.opacity = 1;
 
@@ -85,10 +114,46 @@ const setBoard = () => {
 
     fillPyramid(topCell, cards, delay, interval);
 
-    delay += 28 * interval; 
+    delay += pyramidSize * interval; 
 
     fillStock(topCell, cards, delay, interval);
 
+}
+
+const turn = (e) => {
+
+    let card = e.currentTarget
+
+    if (!card.classList.contains("flip")){
+
+        flipCard(card);
+
+        console.log(card);
+    }
+}
+
+const touchScreen = () => {
+    return matchMedia('(hover: none)').matches;
+}
+
+const enableTouch = () => {
+    for (let card of document.querySelectorAll('.card-wrap')){
+        if (touchScreen()){
+            card.addEventListener("touchstart", turn);
+        } else {
+            card.addEventListener("mousedown", turn);
+        }
+    }
+}
+
+const disableTouch = () => {
+    for (let card of document.querySelectorAll('.card-wrap')){
+        if (touchScreen()){
+            card.removeEventListener("touchstart", turn);
+        } else {
+            card.removeEventListener("mousedown", turn);
+        }
+    }
 }
 
 const shuffle = (array) => {
@@ -135,7 +200,7 @@ const offSet = () => {
 
 const setCards = () => {
 
-    for (let i = 0; i < 28; i++){
+    for (let i = 0; i < 52; i++){
 
         // let card = document.querySelectorAll(".card")[i];
 
@@ -164,6 +229,8 @@ const init = () => {
     setCards();
 
     setBoard();
+
+    enableTouch();
 
 }
 
