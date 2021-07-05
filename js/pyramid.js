@@ -9,7 +9,131 @@ function* zIndex() {
         yield index++;
 }
 
-const flipCard = (card) => {
+const checkOpen = (card) => {
+
+    let cards = [...document.querySelectorAll(".card-wrap")]
+
+    let cardIndex = cards.indexOf(card);
+
+    if (cardIndex > 20) return true;
+
+    let row = Math.floor((-1 + Math.sqrt(1 + 8 * cardIndex)) / 2);
+
+    if (cards[cardIndex + row + 1].classList.contains("hidden") && 
+        cards[cardIndex + row + 2].classList.contains("hidden")) {
+
+            return true;
+    }
+}
+
+const removeCard = (card) => {
+
+    card.style.transition = 'opacity 0.5s linear';
+
+    card.querySelectorAll(".front, .back").forEach(card => {
+
+        card.style.transition = 'opacity 0.5s linear';
+
+    })
+
+    card.style.opacity = 0;
+
+    card.classList.add("hidden");
+}
+
+const thirteens = (rank1, rank2) =>{
+
+    switch(rank1) {
+        case "J":
+            rank1 = 11;
+            break;
+        case "Q":
+            rank1 = 12;
+            break;
+        case "K":
+            rank1 = 13;
+            break;
+        case "A":
+            rank1 = 1;
+            break;
+        default:
+            rank1 = parseInt(rank1);
+    }
+
+    switch(rank2) {
+        case "J":
+            rank2 = 11;
+            break;
+        case "Q":
+            rank2 = 12;
+            break;
+        case "K":
+            rank2 = 13;
+            break;
+        case "A":
+            rank2 = 1;
+            break;
+        default:
+            rank2 = parseInt(rank2);
+    }
+
+    if (rank1 + rank2 == 13) return true;
+
+    return false;
+
+}
+const checkPairs = (card) => {
+
+    let rank1 = card.querySelector(".rank").innerText;
+
+    if (rank1 == "K") {
+        removeCard(card);
+        return;
+    }
+
+    let cards = [...document.querySelectorAll(".card-wrap")];
+
+    let pyramid = cards.slice(0, 28);
+
+    let topPile;
+
+    console.log(rank1);
+
+    for (let i = 28; i < 52; i++) {
+
+        if (cards[i].classList.contains("flip") && !cards[i].classList.contains("hidden")) {
+            topPile = cards[i];
+            break;
+        }
+    }
+
+    for (let i = 0; i < 28; i++) {
+
+        if (!checkOpen(cards[i])) continue;
+
+        let rank2 = cards[i].querySelector(".rank").innerText;
+
+        if (pyramid[i] != card && thirteens(rank1, rank2)) {
+
+            removeCard(card);
+            removeCard(cards[i]);
+
+            break;
+        }
+    }
+
+    if (!topPile || card == topPile) return;
+
+    let rank2 = topPile.querySelector(".rank").innerText;
+
+    if (thirteens(rank1, rank2)) {
+
+        removeCard(card);
+        removeCard(topPile);
+    }
+}
+
+const drawCard = (card) => {
 
     let pileCell = document.querySelector(".pile");
 
@@ -122,14 +246,14 @@ const setBoard = () => {
 
 const turn = (e) => {
 
-    let card = e.currentTarget
+    let card = e.currentTarget;
 
     if (!card.classList.contains("flip")){
-
-        flipCard(card);
-
-        console.log(card);
+        drawCard(card);
+        return;
     }
+
+    if (checkOpen(card)) checkPairs(card);
 }
 
 const touchScreen = () => {
@@ -163,6 +287,53 @@ const shuffle = (array) => {
     }
 }
 
+const winDeck = () => {
+
+    let deck = [];
+
+    let ranks = [6,  1,  2, 12, 13,  2, 4,  5, 13, 9,  7,
+        8, 10,  2,  9,  6, 10, 8, 10, 11, 2,  9,
+        6,  5, 10, 12, 13, 12, 1, 12,  7, 7, 11,
+       11,  3,  4,  5, 11,  8, 4,  6,  5, 3,  3,
+        1,  7,  8, 13,  9,  3, 4,  1];
+
+    const suits = ['♥','♠','♦','♣'];
+
+    ranks.forEach(rank => {
+
+        switch(rank) {
+            case 11:
+                rank = "J";
+                break;
+            case 12:
+                rank = "Q";
+                break;
+            case 13:
+                rank = "K";
+                break;
+            case 1:
+                rank = "A";
+                break;
+            default:
+                rank = String(rank);
+        }
+
+        shuffle(suits);
+
+        for (suit of suits) {
+
+            card = rank + suit;
+
+            if (!deck.includes(card)) {
+                deck.push(card);
+                break;
+            }
+        }
+    })
+
+    return deck;
+}
+
 const setDeck = () => {
 
     cards = [];
@@ -183,7 +354,10 @@ const setDeck = () => {
 
     shuffle(cards);
 
+    cards = winDeck();
+
     console.log(cards);
+
 
            
 }
@@ -192,17 +366,11 @@ const offSet = () => {
 
     let topCell = document.querySelector(".cell");
 
-
-    console.log(topCell.offsetLeft);
-    console.log(topCell.offsetTop);
-
 }
 
 const setCards = () => {
 
     for (let i = 0; i < 52; i++){
-
-        // let card = document.querySelectorAll(".card")[i];
 
         let card = document.querySelectorAll(".front")[i];
 
@@ -231,7 +399,6 @@ const init = () => {
     setBoard();
 
     enableTouch();
-
 }
 
 window.onload = () => {

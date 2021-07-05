@@ -256,6 +256,10 @@ body{
 
 }
 
+.hidden{
+    visibility: hidden;
+}
+
 @keyframes scaling {
     0% {
         transform: scale(1.0);
