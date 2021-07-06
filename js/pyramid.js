@@ -4,7 +4,7 @@ const deckSize = 52;
 let generator = zIndex();
 
 function* zIndex() {
-    var index = 0;
+    var index = 1;
     while(true)
         yield index++;
 }
@@ -197,9 +197,9 @@ const fillStock = (topCell, cards, delay, interval) => {
 
     let stockCell = document.querySelector(".stock");
 
-    for (let i = pyramidSize; i < deckSize; i++) {
+    for (let i = pyramidSize; i < deckSize - 1; i++) {
 
-        delay += 0.05;
+        delay += interval;
 
         let card = cards[i];
 
@@ -226,7 +226,43 @@ const fillStock = (topCell, cards, delay, interval) => {
 
 }
 
+const fillPile = (topCell, cards, delay, interval) => {
+
+    let pileCell = document.querySelector(".pile");
+
+    let card = cards[deckSize - 1];
+
+    card.style.left = topCell.offsetLeft + "px";
+
+    card.style.top = topCell.offsetTop +  550 + "px";
+
+    let offsetLeft = pileCell.offsetLeft - card.offsetLeft;
+
+    let offsetTop = pileCell.offsetTop - card.offsetTop;
+
+    duration = 0.5;
+
+    // delay += interval;
+
+    card.style.opacity = 1;
+
+    card.querySelectorAll(".front, .back").forEach(card => {
+
+        card.style.transition = `all ${duration - 0.2}s ${delay + 0.2}s linear`;
+
+    })
+
+    card.style.transition = `all ${duration}s ${delay}s linear`;
+
+    card.classList.toggle("flip");
+
+    card.style.transform = `translate(${offsetLeft - 2}px, ${offsetTop}px)`;
+
+}
+
 const setBoard = () => {
+
+    setCards();
 
     let topCell = document.querySelector(".cell");
 
@@ -238,10 +274,13 @@ const setBoard = () => {
 
     fillPyramid(topCell, cards, delay, interval);
 
-    delay += pyramidSize * interval; 
+    delay = pyramidSize * interval; 
 
     fillStock(topCell, cards, delay, interval);
 
+    delay = (deckSize) * interval;
+
+    fillPile(topCell, cards, delay, interval);
 }
 
 const turn = (e) => {
@@ -291,13 +330,16 @@ const winDeck = () => {
 
     let deck = [];
 
-    let ranks = [6,  1,  2, 12, 13,  2, 4,  5, 13, 9,  7,
-        8, 10,  2,  9,  6, 10, 8, 10, 11, 2,  9,
-        6,  5, 10, 12, 13, 12, 1, 12,  7, 7, 11,
-       11,  3,  4,  5, 11,  8, 4,  6,  5, 3,  3,
-        1,  7,  8, 13,  9,  3, 4,  1];
+    // let ranks = [4,  9, 2,  3,  5, 10,  8,  1,  6,  2,  9,
+    //     7,  9, 1, 12,  5, 13, 11,  1, 12, 13,  7,
+    //     5,  7, 6, 11,  3,  3, 10,  4, 12,  8, 11,
+    //     9,  3, 4,  7, 10,  6,  2,  2, 13, 13,  4,
+    //    12, 10, 1,  8,  6,  5,  8, 11];
 
-    const suits = ['♥','♠','♦','♣'];
+
+    let ranks = sureWin();
+
+    let suits = ['♥','♠','♦','♣'];
 
     ranks.forEach(rank => {
 
@@ -322,7 +364,7 @@ const winDeck = () => {
 
         for (suit of suits) {
 
-            card = rank + suit;
+            let card = rank + suit;
 
             if (!deck.includes(card)) {
                 deck.push(card);
@@ -334,7 +376,7 @@ const winDeck = () => {
     return deck;
 }
 
-const setDeck = () => {
+const getDeck = () => {
 
     cards = [];
     
@@ -346,7 +388,7 @@ const setDeck = () => {
 
         ranks.forEach(rank => {
 
-            card = rank + suit;
+            let card = rank + suit;
 
             cards.push(card);
         })
@@ -357,18 +399,17 @@ const setDeck = () => {
     cards = winDeck();
 
     console.log(cards);
-
-
-           
 }
 
-const offSet = () => {
+// const offSet = () => {
 
-    let topCell = document.querySelector(".cell");
+//     let topCell = document.querySelector(".cell");
 
-}
+// }
 
 const setCards = () => {
+
+    getDeck();
 
     for (let i = 0; i < 52; i++){
 
@@ -389,12 +430,6 @@ const setCards = () => {
 }
 
 const init = () => {
-
-    setDeck();
-
-    offSet();
-
-    setCards();
 
     setBoard();
 

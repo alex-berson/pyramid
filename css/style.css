@@ -234,8 +234,8 @@ body{
     height: var(--card-height);
     margin-left: 2px;
     margin-right: 2px;
-    background-color: #143709;
-    border: 1px solid rgba(256,256,256, 0.1);
+    /* background-color: #143709; */
+    /* border: 1px solid rgba(256,256,256, 0.1); */
     border-radius: 4px;
 
     /* opacity: 0; */
@@ -248,8 +248,8 @@ body{
     height: var(--card-height);
     margin-left: 27px;
     margin-right: 2px;
-    background-color: #143709;
-    border: 1px solid rgba(256,256,256, 0.1);
+    /* background-color: #143709; */
+    /* border: 1px solid rgba(256,256,256, 0.1); */
     border-radius: 4px;
 
     /* opacity: 0; */
