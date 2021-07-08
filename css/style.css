@@ -112,6 +112,10 @@ body{
     opacity: 0;
 }
 
+.zoom{
+    transform: scale(1.5);
+}
+
 .front {
     position: absolute;
     display: flex;

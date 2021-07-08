@@ -354,7 +354,7 @@ const chances = () => {
 // }
 
 
-const sureWin = (startTime) => {
+const winDeck = (startTime) => {
 
     let tries = 0;
 

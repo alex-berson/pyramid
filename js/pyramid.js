@@ -283,6 +283,24 @@ const setBoard = () => {
     fillPile(topCell, cards, delay, interval);
 }
 
+const zoom = (card) => {
+
+    // card.querySelector(".card").classList.add("zoom");
+
+    card.style.transition = 'transform 0.25s linear';
+
+    card.style.transform += "scale(1.1)";
+}
+
+const removeZoom = (e) => {
+
+    let card = e.currentTarget;
+
+    // card.querySelector(".card").classList.remove("zoom");
+
+    card.style.transform = card.style.transform.replace("scale(1.1)", "");
+}
+
 const turn = (e) => {
 
     let card = e.currentTarget;
@@ -292,7 +310,10 @@ const turn = (e) => {
         return;
     }
 
-    if (checkOpen(card)) checkPairs(card);
+    if (checkOpen(card)) {
+        zoom(card);
+        checkPairs(card);
+    }
 }
 
 const touchScreen = () => {
@@ -300,11 +321,15 @@ const touchScreen = () => {
 }
 
 const enableTouch = () => {
+
     for (let card of document.querySelectorAll('.card-wrap')){
         if (touchScreen()){
             card.addEventListener("touchstart", turn);
+            card.addEventListener("touchend", removeZoom);
+
         } else {
             card.addEventListener("mousedown", turn);
+            card.addEventListener("mouseup", removeZoom);
         }
     }
 }
@@ -326,9 +351,9 @@ const shuffle = (array) => {
     }
 }
 
-const winDeck = () => {
+const getDeck = () => {
 
-    let deck = [];
+    cards = [];
 
     // let ranks = [4,  9, 2,  3,  5, 10,  8,  1,  6,  2,  9,
     //     7,  9, 1, 12,  5, 13, 11,  1, 12, 13,  7,
@@ -337,7 +362,7 @@ const winDeck = () => {
     //    12, 10, 1,  8,  6,  5,  8, 11];
 
 
-    let ranks = sureWin();
+    let ranks = winDeck();
 
     let suits = ['♥','♠','♦','♣'];
 
@@ -366,40 +391,40 @@ const winDeck = () => {
 
             let card = rank + suit;
 
-            if (!deck.includes(card)) {
-                deck.push(card);
+            if (!cards.includes(card)) {
+                cards.push(card);
                 break;
             }
         }
     })
 
-    return deck;
+    // return deck;
 }
 
-const getDeck = () => {
+// const getDeck = () => {
 
-    cards = [];
+//     cards = [];
     
-    const ranks = ['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
-    const suits = ['♥','♠','♦','♣'];
+//     const ranks = ['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
+//     const suits = ['♥','♠','♦','♣'];
 
 
-    suits.forEach(suit => {
+//     suits.forEach(suit => {
 
-        ranks.forEach(rank => {
+//         ranks.forEach(rank => {
 
-            let card = rank + suit;
+//             let card = rank + suit;
 
-            cards.push(card);
-        })
-    })
+//             cards.push(card);
+//         })
+//     })
 
-    shuffle(cards);
+//     shuffle(cards);
 
-    cards = winDeck();
+//     cards = winDeck();
 
-    console.log(cards);
-}
+//     console.log(cards);
+// }
 
 // const offSet = () => {
 
