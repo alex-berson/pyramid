@@ -28,60 +28,56 @@ const checkOpen = (card) => {
 
 const removeCard = (card) => {
 
-    card.style.transition = 'opacity 0.5s linear';
+    // card.style.transition = 'all 0s linear';
 
-    card.querySelectorAll(".front, .back").forEach(card => {
+    card.classList.add("hidden");
 
-        card.style.transition = 'opacity 0.5s linear';
 
-    })
+    card.style.transition = 'all 0.5s linear';
+
+
+    // card.querySelectorAll(".front, .back").forEach(card => {
+
+    //     card.style.transition = 'opacity 0.5s linear';
+
+    // })
 
     card.style.opacity = 0;
 
-    card.classList.add("hidden");
+    card.style.transform += "scale(3.0)";
+
+    card.style.pointerEvents = "none";
+}
+
+const rankNum = (rank) => {
+
+    switch(rank) {
+        case "A":
+            rank = 1;
+            break;
+        case "J":
+            rank = 11;
+            break;
+        case "Q":
+            rank = 12;
+            break;
+        case "K":
+            rank = 13;
+            break;
+        default:
+            rank = parseInt(rank);
+    }
+
+    return rank;
 }
 
 const thirteens = (rank1, rank2) =>{
 
-    switch(rank1) {
-        case "J":
-            rank1 = 11;
-            break;
-        case "Q":
-            rank1 = 12;
-            break;
-        case "K":
-            rank1 = 13;
-            break;
-        case "A":
-            rank1 = 1;
-            break;
-        default:
-            rank1 = parseInt(rank1);
-    }
-
-    switch(rank2) {
-        case "J":
-            rank2 = 11;
-            break;
-        case "Q":
-            rank2 = 12;
-            break;
-        case "K":
-            rank2 = 13;
-            break;
-        case "A":
-            rank2 = 1;
-            break;
-        default:
-            rank2 = parseInt(rank2);
-    }
-
-    if (rank1 + rank2 == 13) return true;
+    if (rankNum(rank1) + rankNum(rank2) == 13) return true;
 
     return false;
-
 }
+
 const checkPairs = (card) => {
 
     let rank1 = card.querySelector(".rank").innerText;
@@ -97,7 +93,7 @@ const checkPairs = (card) => {
 
     let topPile;
 
-    console.log(rank1);
+    // console.log(rank1);
 
     for (let i = 28; i < 52; i++) {
 
@@ -109,7 +105,7 @@ const checkPairs = (card) => {
 
     for (let i = 0; i < 28; i++) {
 
-        if (!checkOpen(cards[i])) continue;
+        if (!checkOpen(cards[i]) || cards[i].classList.contains("hidden")) continue;
 
         let rank2 = cards[i].querySelector(".rank").innerText;
 
@@ -118,7 +114,7 @@ const checkPairs = (card) => {
             removeCard(card);
             removeCard(cards[i]);
 
-            break;
+            return;
         }
     }
 
@@ -134,6 +130,8 @@ const checkPairs = (card) => {
 }
 
 const drawCard = (card) => {
+
+    disableCard(card);
 
     let pileCell = document.querySelector(".pile");
 
@@ -320,27 +318,44 @@ const touchScreen = () => {
     return matchMedia('(hover: none)').matches;
 }
 
+const enableCard = (card) => {
+
+    if (card.currentTarget) {
+        card = card.currentTarget;
+    }
+
+    if (touchScreen()){
+        card.addEventListener("touchstart", turn);
+        card.addEventListener("touchend", removeZoom);
+
+    } else {
+        card.addEventListener("mousedown", turn);
+        card.addEventListener("mouseup", removeZoom);
+    }
+
+    card.addEventListener('transitionend', enableCard); 
+}
+
 const enableTouch = () => {
-
     for (let card of document.querySelectorAll('.card-wrap')){
-        if (touchScreen()){
-            card.addEventListener("touchstart", turn);
-            card.addEventListener("touchend", removeZoom);
-
-        } else {
-            card.addEventListener("mousedown", turn);
-            card.addEventListener("mouseup", removeZoom);
-        }
+        enableCard(card);
     }
 }
 
+const disableCard = (card) => {
+    if (touchScreen()){
+        card.removeEventListener("touchstart", turn);
+        card.removeEventListener("touchend", removeZoom);
+
+    } else {
+        card.removeEventListener("mousedown", turn);
+        card.removeEventListener("mouseup", removeZoom);
+    }
+} 
+
 const disableTouch = () => {
     for (let card of document.querySelectorAll('.card-wrap')){
-        if (touchScreen()){
-            card.removeEventListener("touchstart", turn);
-        } else {
-            card.removeEventListener("mousedown", turn);
-        }
+        disableCard(card);
     }
 }
 
@@ -355,14 +370,14 @@ const getDeck = () => {
 
     cards = [];
 
-    // let ranks = [4,  9, 2,  3,  5, 10,  8,  1,  6,  2,  9,
-    //     7,  9, 1, 12,  5, 13, 11,  1, 12, 13,  7,
-    //     5,  7, 6, 11,  3,  3, 10,  4, 12,  8, 11,
-    //     9,  3, 4,  7, 10,  6,  2,  2, 13, 13,  4,
-    //    12, 10, 1,  8,  6,  5,  8, 11];
+    let ranks = [4,  9, 2,  3,  5, 10,  8,  1,  6,  2,  9,
+        7,  9, 1, 12,  5, 13, 11,  1, 12, 13,  7,
+        5,  7, 6, 11,  3,  3, 10,  4, 12,  8, 11,
+        9,  3, 4,  7, 10,  6,  2,  2, 13, 13,  4,
+       12, 10, 1,  8,  6,  5,  8, 11];
 
 
-    let ranks = winDeck();
+    // let ranks = winDeck();
 
     let suits = ['♥','♠','♦','♣'];
 
