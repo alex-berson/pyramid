@@ -1,12 +1,18 @@
 let cards = [];
 const pyramidSize = 28;
 const deckSize = 52;
-let generator = zIndex();
 
-function* zIndex() {
-    var index = 1;
-    while(true)
-        yield index++;
+const zIndex = () => {
+
+    if (!zIndex.value) zIndex.value = 1;
+
+    zIndex.value < 5 ? zIndex.value *= 3 : zIndex.value *= 2;
+
+    // zIndex.value *= 2;
+
+    console.log(zIndex.value);
+
+    return zIndex.value;
 }
 
 const checkOpen = (card) => {
@@ -26,12 +32,77 @@ const checkOpen = (card) => {
     }
 }
 
+const clickThrough = (e) => {
+
+    let divStack;
+
+    // console.log(e);
+
+    // console.log(e.type);
+
+    if (!clickThrough.x) clickThrough.x = 0;
+
+    if (!clickThrough.y) clickThrough.y = 0;
+
+    if (e.type == "touchstart") {
+       
+        clickThrough.x = e.touches[0].clientX;
+        clickThrough.y = e.touches[0].clientY;
+
+        divStack = document.elementsFromPoint(clickThrough.x, clickThrough.y);
+
+    } else if (e.type == "mousedown") {
+
+        clickThrough.x = e.clientX;
+        clickThrough.y = e.clientY;
+
+        divStack = document.elementsFromPoint(clickThrough.x, clickThrough.y);
+
+    } else {
+
+        divStack = document.elementsFromPoint(clickThrough.x, clickThrough.y);
+
+        clickThrough.x = 0;
+        clickThrough.y = 0;
+    }
+
+    // console.log(divStack);
+
+    // console.log(divStack[0]);
+
+    for (div of divStack) {
+
+        if (div.classList.contains("card-wrap") && !div.classList.contains("hidden")) {
+
+            if (e.type == "touchstart" || e.type == "mousedown") {
+
+                let touchEvent = touchScreen() ? new Event('touchstart') : new Event('mousedown');
+
+                div.dispatchEvent(touchEvent);
+
+            } else {
+
+                let touchEvent = touchScreen() ? new Event('touchend') : new Event('mouseup');
+
+                div.dispatchEvent(touchEvent);
+            }
+            break;
+        }
+    }
+}
+
+const enableClickThough = (card) => {
+
+    if (touchScreen()){
+        card.addEventListener("touchstart", clickThrough);
+        card.addEventListener("touchend", clickThrough);
+    } else {
+        card.addEventListener("mousedown", clickThrough);
+        card.addEventListener("mouseup", clickThrough);
+    }
+}
+
 const removeCard = (card) => {
-
-    // card.style.transition = 'all 0s linear';
-
-    card.classList.add("hidden");
-
 
     card.style.transition = 'all 0.5s linear';
 
@@ -42,14 +113,22 @@ const removeCard = (card) => {
 
     // })
 
+    disableCard(card);
+
+    enableClickThough(card);
+
+    // card.style.pointerEvents = "none";
+
     card.style.opacity = 0;
 
     card.style.transform += "scale(3.0)";
 
-    card.style.pointerEvents = "none";
+    // card.classList.add("untouchable");
+
+    card.classList.add("hidden");
 }
 
-const rankNum = (rank) => {
+const rankValue = (rank) => {
 
     switch(rank) {
         case "A":
@@ -73,7 +152,7 @@ const rankNum = (rank) => {
 
 const thirteens = (rank1, rank2) =>{
 
-    if (rankNum(rank1) + rankNum(rank2) == 13) return true;
+    if (rankValue(rank1) + rankValue(rank2) == 13) return true;
 
     return false;
 }
@@ -131,7 +210,9 @@ const checkPairs = (card) => {
 
 const drawCard = (card) => {
 
-    disableCard(card);
+    // disableCard(card);
+
+    // card.addEventListener('transitionend', enableCard); 
 
     let pileCell = document.querySelector(".pile");
 
@@ -139,7 +220,9 @@ const drawCard = (card) => {
 
     let offsetTop = pileCell.offsetTop - card.offsetTop;
 
-    card.style.zIndex = generator.next().value;
+    // card.style.zIndex = generator.next().value;
+
+    card.style.zIndex = zIndex();
 
     card.querySelector(".card").classList.add("zoom");
 
@@ -161,7 +244,6 @@ const fillPyramid = (topCell, cards, delay, interval) => {
         card.style.left = topCell.offsetLeft + "px";
 
         card.style.top = topCell.offsetTop +  550 + "px";
-
 
         let cell = document.querySelectorAll(".cell")[i];
 
@@ -290,18 +372,25 @@ const zoom = (card) => {
     card.style.transform += "scale(1.1)";
 }
 
-const removeZoom = (e) => {
+const removeZoom = (card) => {
 
-    let card = e.currentTarget;
+    if (card.currentTarget) card = card.currentTarget;
+
+
+    // let card = e.currentTarget;
 
     // card.querySelector(".card").classList.remove("zoom");
 
     card.style.transform = card.style.transform.replace("scale(1.1)", "");
 }
 
-const turn = (e) => {
+const turn = (card) => {
 
-    let card = e.currentTarget;
+    // pe();
+
+    if (card.currentTarget) card = card.currentTarget;
+
+    // let card = e.currentTarget;
 
     if (!card.classList.contains("flip")){
         drawCard(card);
@@ -309,10 +398,24 @@ const turn = (e) => {
     }
 
     if (checkOpen(card)) {
+
+        // console.log(card.querySelector(".rank").innerText);
+
         zoom(card);
         checkPairs(card);
+
+        // card.style.pointerEvents = "none";
     }
 }
+
+// const pe = () => {
+
+//     for (let card of document.querySelectorAll('.card-wrap')){
+//         card.style.pointerEvents = "none";
+//     }
+
+//     document.querySelector('span').style.pointerEvents = "none";
+// }
 
 const touchScreen = () => {
     return matchMedia('(hover: none)').matches;
@@ -320,9 +423,11 @@ const touchScreen = () => {
 
 const enableCard = (card) => {
 
-    if (card.currentTarget) {
-        card = card.currentTarget;
-    }
+    if (card.currentTarget) card = card.currentTarget;
+    
+
+    // card.style.pointerEvents = "none";
+
 
     if (touchScreen()){
         card.addEventListener("touchstart", turn);
@@ -333,7 +438,8 @@ const enableCard = (card) => {
         card.addEventListener("mouseup", removeZoom);
     }
 
-    card.addEventListener('transitionend', enableCard); 
+    // card.style.pointerEvents = "auto";
+
 }
 
 const enableTouch = () => {
@@ -467,6 +573,11 @@ const setCards = () => {
         card.querySelector(".main").innerText = suit;  
 
     }
+
+    // let card = [...document.querySelectorAll(".front")].pop();
+
+    // card.querySelector(".main").innerHTML = `<span>${suit}</span>`;  
+
 }
 
 const init = () => {
@@ -474,6 +585,8 @@ const init = () => {
     setBoard();
 
     enableTouch();
+
+    // setTimeout(enableTouch, 3000);
 }
 
 window.onload = () => {

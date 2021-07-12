@@ -110,6 +110,8 @@ body{
 .card-wrap{
     position: absolute;
     opacity: 0;
+
+    /* pointer-events: none; */
 }
 
 .zoom{
@@ -264,6 +266,10 @@ body{
     visibility: hidden;
     /* display: none; */
 }
+
+/* .untouchable{
+    pointer-events: none;
+} */
 
 @keyframes scaling {
     0% {
