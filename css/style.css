@@ -114,8 +114,8 @@ body{
     /* pointer-events: none; */
 }
 
-.zoom{
-    transform: scale(1.5);
+.card-wrap:hover{
+    cursor: pointer;
 }
 
 .front {

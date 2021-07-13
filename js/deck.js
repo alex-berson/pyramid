@@ -174,9 +174,9 @@ const checkThirteens = () => {
 
     for (let i = 0; i < freeCards.length - 1; i++) {
 
-        for (let j = i; j < freeCards.length - 1; j++) {
+        for (let j = i + 1; j < freeCards.length; j++) {
 
-            if (card(freeCards[i]) + card(freeCards[j + 1]) == 13) {
+            if (card(freeCards[i]) + card(freeCards[j]) == 13) {
 
 
                 // console.log(card(freeCards[i]), " + ",  card(freeCards[j + 1]));
@@ -186,8 +186,8 @@ const checkThirteens = () => {
                 if (freeCards[i] > 27) pile.pop();  
 
                 // [row, column] = position(freeCards[j +1]);   
-                deleteCard(freeCards[j + 1]);
-                if (freeCards[j + 1] > 27) pile.pop();  
+                deleteCard(freeCards[j]);
+                if (freeCards[j] > 27) pile.pop();  
 
                 // console.log("pyramid: ");
 

@@ -1,8 +1,14 @@
 let cards = [];
 const pyramidSize = 28;
 const deckSize = 52;
+let repeat = false;
 
-const zIndex = () => {
+const zIndex = (index = 1) => {
+
+    if (!index) {
+        zIndex.value = 0;
+        return;
+    }
 
     if (!zIndex.value) zIndex.value = 1;
 
@@ -15,7 +21,7 @@ const zIndex = () => {
     return zIndex.value;
 }
 
-const checkOpen = (card) => {
+const cardOpen = (card) => {
 
     let cards = [...document.querySelectorAll(".card-wrap")]
 
@@ -91,7 +97,7 @@ const clickThrough = (e) => {
     }
 }
 
-const enableClickThough = (card) => {
+const enableClickThrough = (card) => {
 
     if (touchScreen()){
         card.addEventListener("touchstart", clickThrough);
@@ -99,6 +105,17 @@ const enableClickThough = (card) => {
     } else {
         card.addEventListener("mousedown", clickThrough);
         card.addEventListener("mouseup", clickThrough);
+    }
+}
+
+const disableClickThrough = (card) => {
+
+    if (touchScreen()){
+        card.removeEventListener("touchstart", clickThrough);
+        card.removeEventListener("touchend", clickThrough);
+    } else {
+        card.removeEventListener("mousedown", clickThrough);
+        card.removeEventListener("mouseup", clickThrough);
     }
 }
 
@@ -115,7 +132,7 @@ const removeCard = (card) => {
 
     disableCard(card);
 
-    enableClickThough(card);
+    enableClickThrough(card);
 
     // card.style.pointerEvents = "none";
 
@@ -126,6 +143,121 @@ const removeCard = (card) => {
     // card.classList.add("untouchable");
 
     card.classList.add("hidden");
+
+    // if (win()) {repeat = false; setTimeout(init, 1000);}
+
+    // if (lost()) gameOver();
+}
+
+// const newGame = () => {
+//     console.log("NEW");
+// }
+
+const gameOver = () => {
+
+    repeat = true;
+
+    console.log("LOST");
+
+    let cards = document.querySelectorAll('.card-wrap:not(.hidden)');
+
+    // console.log(cards);
+
+    cards.forEach(card => {
+
+        let front = card.querySelector('.front');
+
+        let color = window.getComputedStyle(front).getPropertyValue('color');
+
+        // console.log(color);
+
+        front.style = "";
+
+        front.style.color = color;
+
+        front.style.transition = "all 2s linear";
+
+    });
+
+    cards.forEach(card => {
+
+        let front = card.querySelector('.front');
+
+        front.style.background = "gainsboro";
+    });
+
+    setTimeout(() => {
+
+        if (touchScreen()){
+            document.addEventListener("touchstart", init);
+        } else {
+            document.addEventListener("mousedown", init);
+        }
+
+    }, 500);
+
+}
+
+const win = () => {
+
+    let removedCards = document.querySelectorAll('.hidden');
+
+    if (removedCards.length == deckSize) return true;
+
+    return false;
+}
+
+const lost = () => {
+
+    let openCards = [];
+
+    let flippedCards = document.querySelectorAll('.flip');
+
+    if (flippedCards.length < deckSize) return false;
+
+    cards = document.querySelectorAll('.card-wrap');
+
+    for (let i = 28; i < 52; i++) {
+
+        if (cards[i].classList.contains("flip") && !cards[i].classList.contains("hidden")) {
+            openCards.push(cards[i]);
+            break;
+        }
+    }
+
+    for (let i = 0; i < 28; i++) {
+
+        if (!cardOpen(cards[i]) || cards[i].classList.contains("hidden")) continue;
+
+        openCards.push(cards[i]);
+    }
+
+    console.log(openCards);
+
+    for (let i = 0; i < openCards.length; i++) {
+
+        let rank = openCards[i].querySelector(".rank").innerText;
+
+        if (rank == "K") return false;    
+    }
+
+    for (let i = 0; i < openCards.length - 1; i++) {
+
+        for (let j = i + 1; j < openCards.length; j++) {
+
+            let rank1 = openCards[i].querySelector(".rank").innerText;
+
+            let rank2 = openCards[j].querySelector(".rank").innerText;
+
+            console.log(rank1);
+
+            console.log(rank2);
+
+            if (thirteen(rank1, rank2)) return false
+        }
+    }
+
+    return true;
 }
 
 const rankValue = (rank) => {
@@ -150,7 +282,7 @@ const rankValue = (rank) => {
     return rank;
 }
 
-const thirteens = (rank1, rank2) =>{
+const thirteen = (rank1, rank2) =>{
 
     if (rankValue(rank1) + rankValue(rank2) == 13) return true;
 
@@ -163,6 +295,8 @@ const checkPairs = (card) => {
 
     if (rank1 == "K") {
         removeCard(card);
+        if (win()) {repeat = false; setTimeout(init, 1000); return}
+        if (lost()) {gameOver(); return}
         return;
     }
 
@@ -184,14 +318,17 @@ const checkPairs = (card) => {
 
     for (let i = 0; i < 28; i++) {
 
-        if (!checkOpen(cards[i]) || cards[i].classList.contains("hidden")) continue;
+        if (!cardOpen(cards[i]) || cards[i].classList.contains("hidden")) continue;
 
         let rank2 = cards[i].querySelector(".rank").innerText;
 
-        if (pyramid[i] != card && thirteens(rank1, rank2)) {
+        if (pyramid[i] != card && thirteen(rank1, rank2)) {
 
             removeCard(card);
             removeCard(cards[i]);
+
+            if (win()) {repeat = false; setTimeout(init, 1000); return}
+            if (lost()) {gameOver(); return}
 
             return;
         }
@@ -201,18 +338,22 @@ const checkPairs = (card) => {
 
     let rank2 = topPile.querySelector(".rank").innerText;
 
-    if (thirteens(rank1, rank2)) {
+    if (thirteen(rank1, rank2)) {
 
         removeCard(card);
         removeCard(topPile);
+
+        if (win()) {repeat = false; setTimeout(init, 1000); return}
+        if (lost()) {gameOver(); return}
+
     }
 }
 
 const drawCard = (card) => {
 
-    // disableCard(card);
+    disableCard(card);
 
-    // card.addEventListener('transitionend', enableCard); 
+    card.addEventListener('transitionend', enableCard); 
 
     let pileCell = document.querySelector(".pile");
 
@@ -231,6 +372,8 @@ const drawCard = (card) => {
     card.style.transition = `all 0.4s 0.05s linear`;
 
     card.style.transform = `translate(${offsetLeft - 2}px, ${offsetTop}px)`;
+
+    if (lost()) gameOver();
 }
 
 const fillPyramid = (topCell, cards, delay, interval) => {
@@ -397,7 +540,7 @@ const turn = (card) => {
         return;
     }
 
-    if (checkOpen(card)) {
+    if (cardOpen(card)) {
 
         // console.log(card.querySelector(".rank").innerText);
 
@@ -421,13 +564,17 @@ const touchScreen = () => {
     return matchMedia('(hover: none)').matches;
 }
 
+
+
 const enableCard = (card) => {
 
     if (card.currentTarget) card = card.currentTarget;
+
+    card.removeEventListener('transitionend', enableCard); 
+
+    disableClickThrough(card);
     
-
     // card.style.pointerEvents = "none";
-
 
     if (touchScreen()){
         card.addEventListener("touchstart", turn);
@@ -443,6 +590,13 @@ const enableCard = (card) => {
 }
 
 const enableTouch = () => {
+
+    if (touchScreen()){
+        document.removeEventListener("touchstart", init);
+    } else {
+        document.removeEventListener("mousedown", init);
+    }
+
     for (let card of document.querySelectorAll('.card-wrap')){
         enableCard(card);
     }
@@ -475,19 +629,23 @@ const shuffle = (array) => {
 const getDeck = () => {
 
     cards = [];
+    // let ranks;
 
-    let ranks = [4,  9, 2,  3,  5, 10,  8,  1,  6,  2,  9,
-        7,  9, 1, 12,  5, 13, 11,  1, 12, 13,  7,
-        5,  7, 6, 11,  3,  3, 10,  4, 12,  8, 11,
-        9,  3, 4,  7, 10,  6,  2,  2, 13, 13,  4,
-       12, 10, 1,  8,  6,  5,  8, 11];
+    // getDeck.ranks = [4,  9, 2,  3,  5, 10,  8,  1,  6,  2,  9,
+    //     7,  9, 1, 12,  5, 13, 11,  1, 12, 13,  7,
+    //     5,  7, 6, 11,  3,  3, 10,  4, 12,  8, 11,
+    //     9,  3, 4,  7, 10,  6,  2,  2, 13, 13,  4,
+    //    12, 10, 1,  8,  6,  5,  8, 11];
 
+    if (!repeat) getDeck.ranks = winDeck();
 
-    // let ranks = winDeck();
+    console.log(repeat);
+
+    console.log(getDeck.ranks);
 
     let suits = ['♥','♠','♦','♣'];
 
-    ranks.forEach(rank => {
+    getDeck.ranks.forEach(rank => {
 
         switch(rank) {
             case 11:
@@ -553,7 +711,26 @@ const getDeck = () => {
 
 // }
 
+const resetCards = () => {
+
+    zIndex(0);
+
+    let cards = document.querySelectorAll('.card-wrap');
+
+    cards.forEach(card => {
+
+        card.style = "";
+        card.className = "card-wrap";
+        card.querySelector('.card').style = "";
+        card.querySelector('.card').className = "card";
+        card.querySelector('.front').style = "";
+        card.querySelector('.back').style = "";
+    })
+}
+
 const setCards = () => {
+
+    resetCards();
 
     getDeck();
 
@@ -577,7 +754,6 @@ const setCards = () => {
     // let card = [...document.querySelectorAll(".front")].pop();
 
     // card.querySelector(".main").innerHTML = `<span>${suit}</span>`;  
-
 }
 
 const init = () => {
