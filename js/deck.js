@@ -1,5 +1,5 @@
-// const pyramidSize = 28;
-// const deckSize = 52;
+const pyramidSize = 28;
+const deckSize = 52;
 
 let pyramid = deck = origDeck = stock = freeCards = pile = [];
 
@@ -38,12 +38,12 @@ const position = (i) => {
     return [row, column];
 }
 
-// const shuffle = (array) => {
-//     for (let i = array.length - 1; i > 0; i--) {
-//         const j = Math.floor(Math.random() * (i + 1));
-//         [array[i], array[j]] = [array[j], array[i]] 
-//     }
-// }
+const shuffle = (array) => {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]] 
+    }
+}
 
 const akq = () => {
 
@@ -370,10 +370,22 @@ const winDeck = (startTime) => {
 
     console.log("TIME: ", (new Date() - startTime) / 1000);
 
+    console.log("TRIES: ", tries);
 
     console.log("DECK: ", origDeck);
 
-    console.log("TOTAL TRIES: ", tries);
+    fs = require('fs');
+    // fs.writeFile('helloworld.txt', JSON.stringify(origDeck), function (err) {
+    //     if (err) return console.log(err);
+    // });
+
+    // fs.fs.appendFileSync('decks.txt', JSON.stringify(origDeck) + ",", function (err) {
+    //     if (err) throw err;
+    //     console.log('Saved!');
+    // });
+
+    fs.appendFileSync('decks.txt',  JSON.stringify(origDeck) + ",");
+
 
     return origDeck;
 
@@ -395,8 +407,9 @@ const winDecks = () => {
 
         let tries = 0;
 
+        console.log("ITERATION: ", i + 1);
 
-        sureWin(startTime);
+        winDeck(startTime);
 
         // while(true){
             
@@ -428,8 +441,8 @@ const winDecks = () => {
 // playWin();
 // chances();
 
-// winDecks();
+winDecks();
 
-// sureWin();
+// winDeck(new Date());
 
 

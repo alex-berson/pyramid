@@ -153,6 +153,29 @@ const removeCard = (card) => {
 //     console.log("NEW");
 // }
 
+const clearBoard = () => {
+
+    if (touchScreen()){
+        document.removeEventListener("touchstart", clearBoard);
+    } else {
+        document.removeEventListener("mousedown", clearBoard);
+    }
+
+    let cards = document.querySelectorAll('.card-wrap:not(.hidden)');
+
+    cards.forEach(card => {
+        card.style.transition = 'all 2s linear';
+
+
+        // let front = card.querySelector('.front');
+
+        card.style.opacity = 0;
+    })
+
+    setTimeout(init, 2000);
+
+}
+
 const gameOver = () => {
 
     repeat = true;
@@ -171,11 +194,15 @@ const gameOver = () => {
 
         // console.log(color);
 
-        front.style = "";
+        // front.style = "";
 
-        front.style.color = color;
+        // front.style.color = color;
 
-        front.style.transition = "all 2s linear";
+        front.style.transition = "all 1s linear";
+
+        front.children[0].style.transition = "all 1s linear";
+
+        front.children[1].style.transition = "all 1s linear";
 
     });
 
@@ -184,17 +211,23 @@ const gameOver = () => {
         let front = card.querySelector('.front');
 
         front.style.background = "gainsboro";
+
+        // console.log(front.children);
+
+        front.children[0].style.opacity = 0.7;
+        front.children[1].style.opacity = 0.7;
+
     });
 
     setTimeout(() => {
 
         if (touchScreen()){
-            document.addEventListener("touchstart", init);
+            document.addEventListener("touchstart", clearBoard);
         } else {
-            document.addEventListener("mousedown", init);
+            document.addEventListener("mousedown", clearBoard);
         }
 
-    }, 500);
+    }, 1000);
 
 }
 
@@ -497,13 +530,21 @@ const setBoard = () => {
 
     fillPyramid(topCell, cards, delay, interval);
 
+    // delay = pyramidSize * interval; 
+
+    // fillStock(topCell, cards, delay, interval);
+
+    // delay = (deckSize) * interval;
+
+    // fillPile(topCell, cards, delay, interval);
+
     delay = pyramidSize * interval; 
 
-    fillStock(topCell, cards, delay, interval);
-
-    delay = (deckSize) * interval;
-
     fillPile(topCell, cards, delay, interval);
+
+    delay = pyramidSize * interval + interval;
+
+    fillStock(topCell, cards, delay, interval);
 }
 
 const zoom = (card) => {
@@ -591,12 +632,6 @@ const enableCard = (card) => {
 
 const enableTouch = () => {
 
-    if (touchScreen()){
-        document.removeEventListener("touchstart", init);
-    } else {
-        document.removeEventListener("mousedown", init);
-    }
-
     for (let card of document.querySelectorAll('.card-wrap')){
         enableCard(card);
     }
@@ -629,7 +664,7 @@ const shuffle = (array) => {
 const getDeck = () => {
 
     cards = [];
-    // let ranks;
+    let ranks;
 
     // getDeck.ranks = [4,  9, 2,  3,  5, 10,  8,  1,  6,  2,  9,
     //     7,  9, 1, 12,  5, 13, 11,  1, 12, 13,  7,
@@ -637,7 +672,8 @@ const getDeck = () => {
     //     9,  3, 4,  7, 10,  6,  2,  2, 13, 13,  4,
     //    12, 10, 1,  8,  6,  5,  8, 11];
 
-    if (!repeat) getDeck.ranks = winDeck();
+    
+    if (!repeat) getDeck.ranks = decks[Math.floor(Math.random() * decks.length)];
 
     console.log(repeat);
 
@@ -721,16 +757,18 @@ const resetCards = () => {
 
         card.style = "";
         card.className = "card-wrap";
-        card.querySelector('.card').style = "";
-        card.querySelector('.card').className = "card";
-        card.querySelector('.front').style = "";
-        card.querySelector('.back').style = "";
+        card.firstElementChild.style = "";
+        card.firstElementChild.className = "card";
+        card.firstElementChild.firstElementChild.style = "";
+        card.firstElementChild.firstElementChild.firstElementChild.style = "";
+        card.firstElementChild.firstElementChild.lastElementChild.style = "";
+        card.firstElementChild.lastElementChild.style = "";
     })
 }
 
 const setCards = () => {
 
-    resetCards();
+    // resetCards();
 
     getDeck();
 
@@ -758,9 +796,17 @@ const setCards = () => {
 
 const init = () => {
 
-    setBoard();
+    resetCards();
 
-    enableTouch();
+    setTimeout(() => {
+
+        setBoard();
+
+        enableTouch();
+
+    }, 1000)
+
+
 
     // setTimeout(enableTouch, 3000);
 }
