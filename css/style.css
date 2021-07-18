@@ -17,16 +17,17 @@
 }
 
 :root {
-    --board-size: 0.87;
+    --board-size: 0.97;
    
     --background-color: #214f11;
 
-    --board-height: 350px;
-    --board-width: 365px;
-    --card-height: 65px;
-    --card-width: 46px;
+    --board-width: 0px;
 
-   
+    --board-height: var(--board-width);
+
+    --card-width: calc(var(--board-width) / 7 * 0.88);
+
+    --card-height: calc((var(--card-width) * 3.5 / 2.5));   
 }
 
 #outer {
@@ -53,23 +54,8 @@ body{
 
     font-family: "Hiragino Sans W6";
 
-
-
-
     background-color: var(--background-color);
-
 }
-
-/* h1{
-    display: inline-block;
-    text-align: center;
-
-    margin: 0;
-    font-size: 90px;
-    color: white;
-    transition: color 1s ease-in-out;  
-    margin-bottom: 100px;
-} */
 
 .board {
     display: flex;
@@ -81,10 +67,10 @@ body{
 
     margin: auto;
 
+    margin-top: 10px;
 
     /* background-color: black; */
     /* margin-top: 100px; */
-
 }
 
 .row {
@@ -92,9 +78,11 @@ body{
     flex-direction: row;
     align-items: center;
     justify-content: center; 
+
+    justify-content: center; 
+
     width: var(--board-width);
     height: var(--card-height);
-
 
     /* background-color: red; */
 }
@@ -132,7 +120,6 @@ body{
     border: 1px solid rgba(0,0,0,0.05);
     border-radius: 4px;
 
-
     opacity: 1;
 }
 
@@ -148,7 +135,6 @@ body{
     background-color: white;
     border: 1px solid rgba(0,0,0,0.05);
     border-radius: 4px;
-
 
     opacity: 1;
 }
@@ -175,13 +161,13 @@ body{
 
     letter-spacing: -0.1em;
 
-    font-size: 24px;
+    font-size: 6.4vmin;
     /* line-height: 80%; */
 }
 
 .suit{
 
-    font-size: 20px;
+    font-size: 5.3vmin;
 
 }
 
@@ -191,17 +177,10 @@ body{
     align-items: center;
     width: calc(var(--card-width));
     height: calc(var(--card-height) / 3 * 2);
-    font-size: 40px;
+    font-size: 10.6vmin;
     /* color: red; */
 
-    /* font-family: "Card Characters";
-    font-weight: normal; */
-
 }
-
-/* .back .card{
-    background: steelblue;
-} */
 
 .back {
     /* padding: 2px;
@@ -285,6 +264,64 @@ body{
 
 .zoom {
     animation: scaling 0.25s 2 linear forwards alternate;
+}
+
+@media (min-width: 460px) and (min-height: 460px){
+
+    /* :root{
+        --card-width: calc(var(--card-width) * 0.7);
+    } */
+
+    .board{
+
+        /* margin-top: 50px; */
+    }
+
+    .card-wrap{
+
+        margin-left: 5px;
+    }
+
+    .front{
+        border: 2px solid rgba(0,0,0,0.05);
+
+        border-radius: 10px;
+    }
+    
+    .back{
+        border: 2px solid rgba(0,0,0,0.05);
+
+        border-radius: 10px;
+
+        padding: 2px;
+    }
+
+    .stock {
+
+        margin-left: 50px;
+    }
+
+    .row:nth-child(8){
+        margin-top: 60px;
+    }
+
+    .cell{
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+
+    /* .rank{
+        font-size: 40px;
+    }
+
+    .suit{
+        font-size: 35px;
+    }
+
+    .main{
+        font-size: 70px;
+    } */
+    
 }
 
 .noselect {

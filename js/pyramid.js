@@ -21,6 +21,13 @@ const zIndex = (index = 1) => {
     return zIndex.value;
 }
 
+const changeFlipDirection = () => {
+
+    const flipDirection = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--flip-direction'));
+
+    document.documentElement.style.setProperty('--flip-direction', flipDirection * -1);
+}
+
 const cardOpen = (card) => {
 
     let cards = [...document.querySelectorAll(".card-wrap")]
@@ -172,8 +179,14 @@ const clearBoard = () => {
         card.style.opacity = 0;
     })
 
-    setTimeout(init, 2000);
+    setTimeout(resetGame, 2000);
 
+}
+
+const resetGame = () => {
+
+    resetCards();
+    setTimeout(init, 1000);
 }
 
 const gameOver = () => {
@@ -328,7 +341,7 @@ const checkPairs = (card) => {
 
     if (rank1 == "K") {
         removeCard(card);
-        if (win()) {repeat = false; setTimeout(init, 1000); return}
+        if (win()) {repeat = false; setTimeout(resetGame, 1000); return}
         if (lost()) {gameOver(); return}
         return;
     }
@@ -360,7 +373,7 @@ const checkPairs = (card) => {
             removeCard(card);
             removeCard(cards[i]);
 
-            if (win()) {repeat = false; setTimeout(init, 1000); return}
+            if (win()) {repeat = false; setTimeout(resetGame, 1000); return}
             if (lost()) {gameOver(); return}
 
             return;
@@ -376,7 +389,7 @@ const checkPairs = (card) => {
         removeCard(card);
         removeCard(topPile);
 
-        if (win()) {repeat = false; setTimeout(init, 1000); return}
+        if (win()) {repeat = false; setTimeout(resetGame, 1000); return}
         if (lost()) {gameOver(); return}
 
     }
@@ -409,7 +422,7 @@ const drawCard = (card) => {
     if (lost()) gameOver();
 }
 
-const fillPyramid = (topCell, cards, delay, interval) => {
+const fillPyramid = (topCell, cards, offset, delay, interval) => {
 
     for (let i = 0; i < pyramidSize; i++) {
 
@@ -419,7 +432,12 @@ const fillPyramid = (topCell, cards, delay, interval) => {
 
         card.style.left = topCell.offsetLeft + "px";
 
-        card.style.top = topCell.offsetTop +  550 + "px";
+        card.style.top = topCell.offsetTop +  offset + "px";
+
+        // card.style.top = topCell.offsetTop +  550 + "px";
+
+
+        console.log(card.style.top);
 
         let cell = document.querySelectorAll(".cell")[i];
 
@@ -433,15 +451,16 @@ const fillPyramid = (topCell, cards, delay, interval) => {
 
         duration = 0.5;
 
-        card.style.opacity = 1;
-
         card.querySelectorAll(".front, .back").forEach(card => {
 
             card.style.transition = `all ${duration - 0.2}s ${delay + 0.2}s linear`;
 
         })
 
-        card.style.transition = `all ${duration}s ${delay}s linear`;
+        card.style.transition = `all ${duration}s ${delay}s linear, opacity 0s linear`;
+
+        card.style.opacity = 1;
+
 
         card.classList.toggle("flip");
 
@@ -449,7 +468,7 @@ const fillPyramid = (topCell, cards, delay, interval) => {
     }
 }
 
-const fillStock = (topCell, cards, delay, interval) => {
+const fillStock = (topCell, cards, offset, delay, interval) => {
 
     let stockCell = document.querySelector(".stock");
 
@@ -461,7 +480,7 @@ const fillStock = (topCell, cards, delay, interval) => {
 
         card.style.left = topCell.offsetLeft + "px";
 
-        card.style.top = topCell.offsetTop +  550 + "px";
+        card.style.top = topCell.offsetTop +  offset + "px";
 
         let offsetLeft = stockCell.offsetLeft - card.offsetLeft;
 
@@ -473,16 +492,16 @@ const fillStock = (topCell, cards, delay, interval) => {
 
         duration = 0.5;
 
-        card.style.opacity = 1;
+        card.style.transition = `all ${duration}s ${delay}s linear, opacity 0s linear`;
 
-        card.style.transition = `all ${duration}s ${delay}s linear`;
+        card.style.opacity = 1;
 
         card.style.transform = `translate(${offsetLeft - 2}px, ${offsetTop}px)`;
     }
 
 }
 
-const fillPile = (topCell, cards, delay, interval) => {
+const fillPile = (topCell, cards, offset, delay, interval) => {
 
     let pileCell = document.querySelector(".pile");
 
@@ -490,7 +509,7 @@ const fillPile = (topCell, cards, delay, interval) => {
 
     card.style.left = topCell.offsetLeft + "px";
 
-    card.style.top = topCell.offsetTop +  550 + "px";
+    card.style.top = topCell.offsetTop +  offset + "px";
 
     let offsetLeft = pileCell.offsetLeft - card.offsetLeft;
 
@@ -500,15 +519,15 @@ const fillPile = (topCell, cards, delay, interval) => {
 
     // delay += interval;
 
-    card.style.opacity = 1;
-
     card.querySelectorAll(".front, .back").forEach(card => {
 
         card.style.transition = `all ${duration - 0.2}s ${delay + 0.2}s linear`;
 
     })
 
-    card.style.transition = `all ${duration}s ${delay}s linear`;
+    card.style.transition = `all ${duration}s ${delay}s linear, opacity 0s linear`;
+
+    card.style.opacity = 1;
 
     card.classList.toggle("flip");
 
@@ -516,7 +535,31 @@ const fillPile = (topCell, cards, delay, interval) => {
 
 }
 
+const setBoardSize = () => {
+
+    let boardSize = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--board-size'));
+
+    // console.log(boardSize);
+
+
+    // console.log(window.innerWidth);
+
+
+    if (window.innerHeight > window.innerWidth) {
+            document.documentElement.style.setProperty('--board-width', window.innerWidth *  boardSize + 'px');
+        } else {
+            document.documentElement.style.setProperty('--board-width', window.innerHeight * boardSize + 'px');
+    }
+
+
+    boardSize = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--board-width'));
+
+    // console.log(boardSize);
+}
+
 const setBoard = () => {
+
+    setBoardSize();
 
     setCards();
 
@@ -524,11 +567,35 @@ const setBoard = () => {
 
     let cards =  document.querySelectorAll(".card-wrap");
 
-    let delay = 0;
+    console.log(cards[0].style.top);
+
+    let offset;
+
+
+    console.log(topCell.parentNode.parentNode.offsetTop);
+
+    console.log(topCell.style.top);
+
+    console.log(window.innerHeight);
+
+
+    offset = window.innerHeight - topCell.parentNode.parentNode.offsetTop + 100;
+
+    console.log(offset);
+
+    // if (window.innerHeight > window.innerWidth) {
+    //     offset = window.innerHeight - topCell.parentNode.parentNode.offsetTop;
+    // } else {
+    //     offset = window.innerH - topCell.parentNode.parentNode.offsetTop;
+    // }
+
+    setTimeout(() => {
+
+        let delay = 0;
 
     let interval = 0.05;
 
-    fillPyramid(topCell, cards, delay, interval);
+    fillPyramid(topCell, cards, offset, delay, interval);
 
     // delay = pyramidSize * interval; 
 
@@ -540,11 +607,15 @@ const setBoard = () => {
 
     delay = pyramidSize * interval; 
 
-    fillPile(topCell, cards, delay, interval);
+    fillPile(topCell, cards, offset, delay, interval);
 
     delay = pyramidSize * interval + interval;
 
-    fillStock(topCell, cards, delay, interval);
+    fillStock(topCell, cards, offset, delay, interval);
+
+
+    }, 1000);
+
 }
 
 const zoom = (card) => {
@@ -591,15 +662,6 @@ const turn = (card) => {
         // card.style.pointerEvents = "none";
     }
 }
-
-// const pe = () => {
-
-//     for (let card of document.querySelectorAll('.card-wrap')){
-//         card.style.pointerEvents = "none";
-//     }
-
-//     document.querySelector('span').style.pointerEvents = "none";
-// }
 
 const touchScreen = () => {
     return matchMedia('(hover: none)').matches;
@@ -675,7 +737,7 @@ const getDeck = () => {
     
     if (!repeat) getDeck.ranks = decks[Math.floor(Math.random() * decks.length)];
 
-    console.log(repeat);
+    console.log("deck length: ", decks.length);
 
     console.log(getDeck.ranks);
 
@@ -712,40 +774,7 @@ const getDeck = () => {
             }
         }
     })
-
-    // return deck;
 }
-
-// const getDeck = () => {
-
-//     cards = [];
-    
-//     const ranks = ['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
-//     const suits = ['♥','♠','♦','♣'];
-
-
-//     suits.forEach(suit => {
-
-//         ranks.forEach(rank => {
-
-//             let card = rank + suit;
-
-//             cards.push(card);
-//         })
-//     })
-
-//     shuffle(cards);
-
-//     cards = winDeck();
-
-//     console.log(cards);
-// }
-
-// const offSet = () => {
-
-//     let topCell = document.querySelector(".cell");
-
-// }
 
 const resetCards = () => {
 
@@ -794,21 +823,28 @@ const setCards = () => {
     // card.querySelector(".main").innerHTML = `<span>${suit}</span>`;  
 }
 
+
 const init = () => {
 
-    resetCards();
-
-    setTimeout(() => {
+    // setTimeout(() => {
 
         setBoard();
 
+        // enableTouch();
+
+    // }, 1000)
+
+
+
+    setTimeout(() => {
+        
         enableTouch();
 
-    }, 1000)
+        // changeFlipDirection();
 
+    }, 3000);
 
-
-    // setTimeout(enableTouch, 3000);
+    
 }
 
 window.onload = () => {
@@ -818,5 +854,3 @@ window.onload = () => {
         }, 50);
     });
 }
-
-

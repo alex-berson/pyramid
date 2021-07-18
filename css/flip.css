@@ -1,5 +1,6 @@
 :root{
     --duration: 0.7s;
+    --flip-direction: -1;
 }
 
 .card-wrap {
@@ -23,10 +24,10 @@
 }
 
 .card-wrap:hover .card-wrap:active .back, .card-wrap.hover .back, .card-wrap.flip .back {
-    -webkit-transform: rotateY(180deg);
-    -moz-transform: rotateY(180deg);
-    -o-transform: rotateY(180deg);
-    transform: rotateY(180deg);
+    -webkit-transform: rotateY(calc(180deg * var(--flip-direction)));
+    -moz-transform: rotateY(calc(180deg * var(--flip-direction)));
+    -o-transform: rotateY(calc(180deg * var(--flip-direction)));
+    transform: rotateY(calc(180deg * var(--flip-direction)));
 } 
 
 .card-wrap, .front{
@@ -93,9 +94,9 @@
 }
 
 .front {
-    -webkit-transform: rotateY(-180deg);
-    -moz-transform: rotateY(-180deg);
-    -o-transform: rotateY(-180deg);
-    -ms-transform: rotateY(-180deg);
-    transform: rotateY(-180deg);
+    -webkit-transform: rotateY(calc(-180deg * var(--flip-direction)));
+    -moz-transform: rotateY(calc(-180deg * var(--flip-direction)));
+    -o-transform: rotateY(calc(-180deg * var(--flip-direction)));
+    -ms-transform: rotateY(calc(-180deg * var(--flip-direction)));
+    transform: rotateY(calc(-180deg * var(--flip-direction)));
 }
