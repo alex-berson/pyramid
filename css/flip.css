@@ -1,5 +1,5 @@
 :root{
-    --duration: 0.7s;
+    --duration: 0.5s;
     --flip-direction: -1;
 }
 
@@ -41,11 +41,11 @@
 }
 
 .card {
-    -webkit-transition: var(--duration);
+    -webkit-transition: var(--duration) linear;
     -webkit-transform-style: preserve-3d;
     -ms-transition: var(--duration);
 
-    -moz-transition: var(--duration);
+    -moz-transition: var(--duration) linear;
     -moz-transform: perspective(1000px);
     -moz-transform-style: preserve-3d;
     -ms-transform-style: preserve-3d;
@@ -62,23 +62,23 @@
     -ms-backface-visibility: hidden;
     backface-visibility: hidden;
 
-    -webkit-transition: var(--duration);
+    -webkit-transition: var(--duration) linear;
     -webkit-transform-style: preserve-3d;
     -webkit-transform: rotateY(0deg);
 
-    -moz-transition: var(--duration);
+    -moz-transition: var(--duration) linear;
     -moz-transform-style: preserve-3d;
     -moz-transform: rotateY(0deg);
 
-    -o-transition: var(--duration);
+    -o-transition: var(--duration) linear;
     -o-transform-style: preserve-3d;
     -o-transform: rotateY(0deg);
 
-    -ms-transition: var(--duration);
+    -ms-transition: var(--duration) linear;
     -ms-transform-style: preserve-3d;
     -ms-transform: rotateY(0deg);
 
-    transition: var(--duration);
+    transition: var(--duration) linear;
     transform-style: preserve-3d;
     transform: rotateY(0deg);
 

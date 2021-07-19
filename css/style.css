@@ -21,7 +21,7 @@
    
     --background-color: #214f11;
 
-    --board-width: 0px;
+    --board-width: 97vmin;
 
     --board-height: var(--board-width);
 
@@ -274,7 +274,7 @@ body{
 
     .board{
 
-        /* margin-top: 50px; */
+        margin-top: 50px;
     }
 
     .card-wrap{
@@ -310,18 +310,25 @@ body{
         margin-right: 5px;
     }
 
-    /* .rank{
-        font-size: 40px;
+    .rank{
+        font-size: 5.2vmin;
     }
 
     .suit{
-        font-size: 35px;
+        font-size: 4.6vmin;
     }
 
     .main{
-        font-size: 70px;
-    } */
+        font-size: 9.1vmin;
+    }
     
+}
+
+@media (orientation: landscape){
+
+    .board{
+        margin-top: 20px;
+    }
 }
 
 .noselect {

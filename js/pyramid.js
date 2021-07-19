@@ -16,9 +16,60 @@ const zIndex = (index = 1) => {
 
     // zIndex.value *= 2;
 
+
+    // if (!index) {
+    //     zIndex.value = -129140163;
+    //     return;
+    // }
+
+    // if (!zIndex.value) zIndex.value = -129140163;
+
+    // zIndex.value < -1 ? zIndex.value /= 3 : zIndex.value = Math.abs(zIndex.value) * 3;
+
+
+
+
+
     console.log(zIndex.value);
 
     return zIndex.value;
+}
+
+const stockReindex = () => {
+
+    let index = -1000;
+
+    el = document.querySelector('.stock');
+
+
+    for (let i = 0; i < 8; i++) {
+
+        el.style.zIndex = index;
+
+        console.log(el);
+
+        el = el.parentNode;
+
+
+        index--;
+
+    }
+
+
+
+    index = -100;
+
+
+
+    let cards = document.querySelectorAll('.card-wrap:not(.flip)');
+
+    cards.forEach(card => {
+
+        card.style.zIndex = index;
+
+        index++;
+    });
+
 }
 
 const changeFlipDirection = () => {
@@ -193,7 +244,7 @@ const gameOver = () => {
 
     repeat = true;
 
-    console.log("LOST");
+    // console.log("LOST");
 
     let cards = document.querySelectorAll('.card-wrap:not(.hidden)');
 
@@ -342,7 +393,7 @@ const checkPairs = (card) => {
     if (rank1 == "K") {
         removeCard(card);
         if (win()) {repeat = false; setTimeout(resetGame, 1000); return}
-        if (lost()) {gameOver(); return}
+        if (lost()) {setTimeout(gameOver, 600); return}
         return;
     }
 
@@ -415,11 +466,11 @@ const drawCard = (card) => {
 
     card.classList.toggle("flip");
 
-    card.style.transition = `all 0.4s 0.05s linear`;
+    card.style.transition = `all 0.5s 0.00s linear`;
 
     card.style.transform = `translate(${offsetLeft - 2}px, ${offsetTop}px)`;
 
-    if (lost()) gameOver();
+    if (lost()) setTimeout(gameOver, 500);
 }
 
 const fillPyramid = (topCell, cards, offset, delay, interval) => {
@@ -559,7 +610,7 @@ const setBoardSize = () => {
 
 const setBoard = () => {
 
-    setBoardSize();
+    // setBoardSize();
 
     setCards();
 
@@ -589,7 +640,7 @@ const setBoard = () => {
     //     offset = window.innerH - topCell.parentNode.parentNode.offsetTop;
     // }
 
-    setTimeout(() => {
+    // setTimeout(() => {
 
         let delay = 0;
 
@@ -614,7 +665,7 @@ const setBoard = () => {
     fillStock(topCell, cards, offset, delay, interval);
 
 
-    }, 1000);
+    // }, 0);
 
 }
 
@@ -837,6 +888,8 @@ const init = () => {
 
 
     setTimeout(() => {
+
+        // stockReindex();
         
         enableTouch();
 
