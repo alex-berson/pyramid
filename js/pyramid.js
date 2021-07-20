@@ -864,9 +864,28 @@ const setCards = () => {
         }
 
         card.querySelector(".rank").innerText = rank;
-        card.querySelector(".suit").innerText = suit;
-        card.querySelector(".main").innerText = suit;  
+        // card.querySelector(".suit").innerText = suit;
+        // card.querySelector(".main").innerText = suit;  
 
+
+        switch(suit){
+            case "♥":
+                card.querySelector(".suit").firstElementChild.src = "images/suits/hearts.png";
+                card.querySelector(".main").firstElementChild.src = "images/suits/hearts.png";
+                break;
+            case "♦":
+                card.querySelector(".suit").firstElementChild.src = "images/suits/diamonds.png";
+                card.querySelector(".main").firstElementChild.src = "images/suits/diamonds.png";
+                break;
+            case "♠":
+                card.querySelector(".suit").firstElementChild.src = "images/suits/spades.png";
+                card.querySelector(".main").firstElementChild.src = "images/suits/spades.png";
+                break;
+            case "♣":
+                card.querySelector(".suit").firstElementChild.src = "images/suits/clubs.png";
+                card.querySelector(".main").firstElementChild.src = "images/suits/clubs.png";
+                break;
+        }
     }
 
     // let card = [...document.querySelectorAll(".front")].pop();
@@ -874,17 +893,19 @@ const setCards = () => {
     // card.querySelector(".main").innerHTML = `<span>${suit}</span>`;  
 }
 
+const disableTouchMove = () => {
+
+    const preventDefault = (e) => e.preventDefault();
+
+    document.body.addEventListener('touchmove', preventDefault, { passive: false });
+}
 
 const init = () => {
 
-    // setTimeout(() => {
+
+        disableTouchMove();
 
         setBoard();
-
-        // enableTouch();
-
-    // }, 1000)
-
 
 
     setTimeout(() => {
