@@ -30,6 +30,16 @@
     --card-height: calc((var(--card-width) * 3.5 / 2.5));   
 }
 
+body{
+    /* font-family: 'Roboto Slab', serif; */
+
+    font-family: "Hiragino Sans W6";
+
+    background: var(--background-color);
+
+    /* background-image: url("../images/background.jpg"); */
+}
+
 #outer {
     display: table;
     position: absolute;
@@ -47,16 +57,6 @@
 #inner {
     margin-left: auto;
     margin-right: auto;
-}
-
-body{
-    /* font-family: 'Roboto Slab', serif; */
-
-    font-family: "Hiragino Sans W6";
-
-    background-color: var(--background-color);
-
-    /* background-image: url("../images/background.jpg"); */
 }
 
 .board {
@@ -280,7 +280,7 @@ body{
         transform: scale(1.0);
     }
     100% {
-        transform: scale(1.1);
+        transform: scale(1.2);
     }
 }
 

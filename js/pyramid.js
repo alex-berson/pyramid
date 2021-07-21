@@ -30,7 +30,7 @@ const zIndex = (index = 1) => {
 
 
 
-    console.log(zIndex.value);
+    // console.log(zIndex.value);
 
     return zIndex.value;
 }
@@ -219,18 +219,50 @@ const clearBoard = () => {
         document.removeEventListener("mousedown", clearBoard);
     }
 
-    let cards = document.querySelectorAll('.card-wrap:not(.hidden)');
+    let cards = document.querySelectorAll('.card-wrap');
 
-    cards.forEach(card => {
-        card.style.transition = 'all 2s linear';
 
+    for (let i = 28; i < 52; i++) {
+
+        if (cards[i].classList.contains("flip") && !cards[i].classList.contains("hidden")) {
+            
+            for (let j = i + 1; j < 52; j++) {
+                cards[j].classList.add("hidden");
+                cards[j].style.transition = `all 0s linear`;
+                cards[j].style.opacity = 0;
+            }
+            break;
+        }
+    }
+
+
+    cards = document.querySelectorAll('.card-wrap:not(.hidden)');
+
+
+    // let topCell = document.querySelector(".cell");
+
+    // let offset = window.innerHeight - topCell.parentNode.parentNode.offsetTop + 100;
+
+    let interval = 0.05;
+
+    let duration = 0.5;
+
+
+    cards.forEach((card, i) => {
+        // card.style.transition = 'all 0.5s linear, opacity 0.5s ease-out';
+
+
+        card.style.transition = `all ${duration}s ${interval * i}s linear`;
 
         // let front = card.querySelector('.front');
 
         card.style.opacity = 0;
+
+        // card.style.transform += "scale(10.0)";
+
     })
 
-    setTimeout(resetGame, 2000);
+    setTimeout(resetGame, (cards.length * interval + duration) * 1000);
 
 }
 
@@ -329,7 +361,7 @@ const lost = () => {
         openCards.push(cards[i]);
     }
 
-    console.log(openCards);
+    // console.log(openCards);
 
     for (let i = 0; i < openCards.length; i++) {
 
@@ -346,9 +378,9 @@ const lost = () => {
 
             let rank2 = openCards[j].querySelector(".rank").innerText;
 
-            console.log(rank1);
+            // console.log(rank1);
 
-            console.log(rank2);
+            // console.log(rank2);
 
             if (thirteen(rank1, rank2)) return false
         }
@@ -488,7 +520,7 @@ const fillPyramid = (topCell, cards, offset, delay, interval) => {
         // card.style.top = topCell.offsetTop +  550 + "px";
 
 
-        console.log(card.style.top);
+        // console.log(card.style.top);
 
         let cell = document.querySelectorAll(".cell")[i];
 
@@ -618,21 +650,18 @@ const setBoard = () => {
 
     let cards =  document.querySelectorAll(".card-wrap");
 
-    console.log(cards[0].style.top);
+    // console.log(cards[0].style.top);
 
-    let offset;
+    // console.log(topCell.parentNode.parentNode.offsetTop);
 
+    // console.log(topCell.style.top);
 
-    console.log(topCell.parentNode.parentNode.offsetTop);
-
-    console.log(topCell.style.top);
-
-    console.log(window.innerHeight);
+    // console.log(window.innerHeight);
 
 
-    offset = window.innerHeight - topCell.parentNode.parentNode.offsetTop + 100;
+    let offset = window.innerHeight - topCell.parentNode.parentNode.offsetTop + 100;
 
-    console.log(offset);
+    // console.log(offset);
 
     // if (window.innerHeight > window.innerWidth) {
     //     offset = window.innerHeight - topCell.parentNode.parentNode.offsetTop;
@@ -642,7 +671,7 @@ const setBoard = () => {
 
     // setTimeout(() => {
 
-        let delay = 0;
+    let delay = 0;
 
     let interval = 0.05;
 
@@ -866,7 +895,6 @@ const setCards = () => {
         card.querySelector(".rank").innerText = rank;
         // card.querySelector(".suit").innerText = suit;
         // card.querySelector(".main").innerText = suit;  
-
 
         switch(suit){
             case "♥":
