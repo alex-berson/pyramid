@@ -213,56 +213,97 @@ const removeCard = (card) => {
 
 const clearBoard = () => {
 
+    let interval = 0.05;
+    let duration = 0.5;
+
+    disableTouch();
+
     if (touchScreen()){
         document.removeEventListener("touchstart", clearBoard);
     } else {
         document.removeEventListener("mousedown", clearBoard);
     }
 
-    let cards = document.querySelectorAll('.card-wrap');
+    // let cards = document.querySelectorAll('.card-wrap');
 
+
+    // for (let i = 28; i < 52; i++) {
+
+    //     if (!cards[i].classList.contains("hidden")) {
+            
+    //         for (let j = i + 1; j < 52; j++) {
+    //             cards[j].classList.add("hidden");
+    //             cards[j].style.transition = `all 0s linear`;
+    //             cards[j].style.opacity = 0;
+    //         }
+    //         break;
+    //     }
+    // }
+
+
+    // cards = document.querySelectorAll('.card-wrap:not(.hidden)');
+
+
+    // cards.forEach((card, i) => {
+    //     card.style.transition = `all ${duration}s ${interval * i}s linear`;
+    //     card.style.opacity = 0;
+
+    // });
+
+    let cell = document.querySelector(".cell");
+    let offset = window.innerHeight - cell.parentNode.parentNode.offsetTop + 100;
+
+    // let cards = document.querySelectorAll('.card-wrap:not(.hidden)');
+
+    // cards.forEach(card => {
+
+    //     let front = card.querySelector('.front');
+    //     front.style.transition = "all 0s linear";
+    //     front.children[0].style.transition = "all 0s linear";
+    //     front.children[1].style.transition = "all 0s linear";
+    // });
+
+    // cards.forEach(card => {
+
+    //     let front = card.querySelector('.front');
+    //     front.style.background = "white";
+    //     front.children[0].style.opacity = 1;
+    //     front.children[1].style.opacity = 1;
+
+    // });
+
+    let cards = document.querySelectorAll('.card-wrap');
 
     for (let i = 28; i < 52; i++) {
 
-        if (cards[i].classList.contains("flip") && !cards[i].classList.contains("hidden")) {
-            
-            for (let j = i + 1; j < 52; j++) {
-                cards[j].classList.add("hidden");
-                cards[j].style.transition = `all 0s linear`;
-                cards[j].style.opacity = 0;
-            }
-            break;
+        if (!cards[i].classList.contains("hidden")) {
+
+            let offsetLeft = cell.offsetLeft - cards[i].offsetLeft;
+            let offsetTop = offset - cards[i].offsetTop;
+            cards[i].style.transition = `all ${duration}s ${interval}s linear`;
+            cards[i].style.transform = `translate(${offsetLeft}px, ${offsetTop}px)`;
+            interval += 0.05;
+        }
+    }
+
+    for (let i = 27; i >= 0; i--) {
+
+        if (!cards[i].classList.contains("hidden")) {
+
+            let offsetLeft = cell.offsetLeft - cards[i].offsetLeft;
+            let offsetTop = offset - cards[i].offsetTop;
+            cards[i].style.transition = `all ${duration}s ${interval}s linear`;
+            cards[i].style.transform = `translate(${offsetLeft}px, ${offsetTop}px)`;
+            interval += 0.05;
         }
     }
 
 
-    cards = document.querySelectorAll('.card-wrap:not(.hidden)');
 
+    // setTimeout(resetGame, (cards.length * interval + duration) * 1000);
 
-    // let topCell = document.querySelector(".cell");
+    setTimeout(resetGame, (interval + duration) * 1000);
 
-    // let offset = window.innerHeight - topCell.parentNode.parentNode.offsetTop + 100;
-
-    let interval = 0.05;
-
-    let duration = 0.5;
-
-
-    cards.forEach((card, i) => {
-        // card.style.transition = 'all 0.5s linear, opacity 0.5s ease-out';
-
-
-        card.style.transition = `all ${duration}s ${interval * i}s linear`;
-
-        // let front = card.querySelector('.front');
-
-        card.style.opacity = 0;
-
-        // card.style.transform += "scale(10.0)";
-
-    })
-
-    setTimeout(resetGame, (cards.length * interval + duration) * 1000);
 
 }
 
@@ -286,7 +327,7 @@ const gameOver = () => {
 
         let front = card.querySelector('.front');
 
-        let color = window.getComputedStyle(front).getPropertyValue('color');
+        // let color = window.getComputedStyle(front).getPropertyValue('color');
 
         // console.log(color);
 
@@ -425,7 +466,7 @@ const checkPairs = (card) => {
     if (rank1 == "K") {
         removeCard(card);
         if (win()) {repeat = false; setTimeout(resetGame, 1000); return}
-        if (lost()) {setTimeout(gameOver, 600); return}
+        if (lost()) {setTimeout(gameOver, 500); return}
         return;
     }
 
@@ -457,7 +498,7 @@ const checkPairs = (card) => {
             removeCard(cards[i]);
 
             if (win()) {repeat = false; setTimeout(resetGame, 1000); return}
-            if (lost()) {gameOver(); return}
+            if (lost()) {setTimeout(gameOver, 500); return}
 
             return;
         }
@@ -473,10 +514,16 @@ const checkPairs = (card) => {
         removeCard(topPile);
 
         if (win()) {repeat = false; setTimeout(resetGame, 1000); return}
-        if (lost()) {gameOver(); return}
+        if (lost()) {setTimeout(gameOver, 500); return}
 
     }
 }
+
+// const endDraw = (e) => {
+
+//     removeZoom(e);
+//     enableCard(e)
+// }
 
 const drawCard = (card) => {
 
@@ -490,17 +537,24 @@ const drawCard = (card) => {
 
     let offsetTop = pileCell.offsetTop - card.offsetTop;
 
-    // card.style.zIndex = generator.next().value;
-
     card.style.zIndex = zIndex();
+
+    console.log(card);
 
     card.querySelector(".card").classList.add("zoom");
 
+
+    // card.classList.add("zoom");
+
     card.classList.toggle("flip");
 
-    card.style.transition = `all 0.5s 0.00s linear`;
+    card.style.transition = `all 0.5s ease-in-out`;
 
     card.style.transform = `translate(${offsetLeft - 2}px, ${offsetTop}px)`;
+
+    // card.style.transition = 'transform 0.25s linear';
+    // card.style.transform += 'scale(1.1)';
+
 
     if (lost()) setTimeout(gameOver, 500);
 }
@@ -700,10 +754,12 @@ const setBoard = () => {
 
 const zoom = (card) => {
 
+    // card.classList.add("zoom");
+
     // card.querySelector(".card").classList.add("zoom");
 
-    card.style.transition = 'transform 0.25s linear';
 
+    card.style.transition = 'transform 0.25s linear';
     card.style.transform += "scale(1.1)";
 }
 
@@ -728,18 +784,14 @@ const turn = (card) => {
     // let card = e.currentTarget;
 
     if (!card.classList.contains("flip")){
-        drawCard(card);
+
+        drawCard(card);        
         return;
     }
 
     if (cardOpen(card)) {
-
-        // console.log(card.querySelector(".rank").innerText);
-
         zoom(card);
         checkPairs(card);
-
-        // card.style.pointerEvents = "none";
     }
 }
 

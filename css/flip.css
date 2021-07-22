@@ -41,11 +41,11 @@
 }
 
 .card {
-    -webkit-transition: var(--duration) linear;
+    -webkit-transition: var(--duration) ease-in-out;
     -webkit-transform-style: preserve-3d;
     -ms-transition: var(--duration);
 
-    -moz-transition: var(--duration) linear;
+    -moz-transition: var(--duration) ease-in-out;
     -moz-transform: perspective(1000px);
     -moz-transform-style: preserve-3d;
     -ms-transform-style: preserve-3d;
@@ -62,23 +62,23 @@
     -ms-backface-visibility: hidden;
     backface-visibility: hidden;
 
-    -webkit-transition: var(--duration) linear;
+    -webkit-transition: var(--duration) ease-in-out;
     -webkit-transform-style: preserve-3d;
     -webkit-transform: rotateY(0deg);
 
-    -moz-transition: var(--duration) linear;
+    -moz-transition: var(--duration) ease-in-out;
     -moz-transform-style: preserve-3d;
     -moz-transform: rotateY(0deg);
 
-    -o-transition: var(--duration) linear;
+    -o-transition: var(--duration) ease-in-out;
     -o-transform-style: preserve-3d;
     -o-transform: rotateY(0deg);
 
-    -ms-transition: var(--duration) linear;
+    -ms-transition: var(--duration) ease-in-out;
     -ms-transform-style: preserve-3d;
     -ms-transform: rotateY(0deg);
 
-    transition: var(--duration) linear;
+    transition: var(--duration) ease-in-out;
     transform-style: preserve-3d;
     transform: rotateY(0deg);
 
