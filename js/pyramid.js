@@ -202,21 +202,18 @@ const removeCard = (card) => {
 
     card.classList.add("hidden");
 
+    card.addEventListener('transitionend', resetCard); 
+
     // if (win()) {repeat = false; setTimeout(init, 1000);}
 
     // if (lost()) gameOver();
 }
 
-// const newGame = () => {
-//     console.log("NEW");
-// }
 
 const clearBoard = () => {
 
     let interval = 0.05;
     let duration = 0.5;
-
-    disableTouch();
 
     if (touchScreen()){
         document.removeEventListener("touchstart", clearBoard);
@@ -224,31 +221,44 @@ const clearBoard = () => {
         document.removeEventListener("mousedown", clearBoard);
     }
 
-    // let cards = document.querySelectorAll('.card-wrap');
+    let cards = document.querySelectorAll('.card-wrap');
 
 
-    // for (let i = 28; i < 52; i++) {
+    for (let i = 28; i < 52; i++) {
 
-    //     if (!cards[i].classList.contains("hidden")) {
+        if (!cards[i].classList.contains("hidden")) {
             
-    //         for (let j = i + 1; j < 52; j++) {
-    //             cards[j].classList.add("hidden");
-    //             cards[j].style.transition = `all 0s linear`;
-    //             cards[j].style.opacity = 0;
-    //         }
-    //         break;
-    //     }
-    // }
+            for (let j = i + 1; j < 52; j++) {
+                cards[j].classList.add("hidden");
+                cards[j].style.transition = `all 0s linear`;
+                cards[j].style.opacity = 0;
+            }
+            break;
+        }
+    }
+
+    cards = document.querySelectorAll('.card-wrap:not(.hidden)');
 
 
-    // cards = document.querySelectorAll('.card-wrap:not(.hidden)');
+    cards.forEach((card, i) => {
+        card.style.transition = `all ${duration}s ${interval * i}s linear`;
+        card.style.opacity = 0;
 
+    });
 
-    // cards.forEach((card, i) => {
-    //     card.style.transition = `all ${duration}s ${interval * i}s linear`;
-    //     card.style.opacity = 0;
+    setTimeout(resetGame, (cards.length * interval + duration) * 1000);
+}
 
-    // });
+const clearBoard2 = () => {
+
+    let interval = 0.05;
+    let duration = 0.5;
+
+    if (touchScreen()){
+        document.removeEventListener("touchstart", clearBoard2);
+    } else {
+        document.removeEventListener("mousedown", clearBoard2);
+    }
 
     let cell = document.querySelector(".cell");
     let offset = window.innerHeight - cell.parentNode.parentNode.offsetTop + 100;
@@ -298,11 +308,322 @@ const clearBoard = () => {
         }
     }
 
-
-
-    // setTimeout(resetGame, (cards.length * interval + duration) * 1000);
-
     setTimeout(resetGame, (interval + duration) * 1000);
+}
+
+
+const removePile = () => {
+
+    let cards = document.querySelectorAll('.card-wrap');
+
+    for (let i = 28; i < deckSize; i++) {
+
+        cards[i].style.display = "none";
+
+
+    }
+}
+
+const removeZIndex = (card) => {
+
+    if (card.currentTarget) card = card.currentTarget;
+    card.removeEventListener('transitionend', removeZIndex); 
+
+    card.style.zIndex = "auto";
+
+    // card.classList.remove("index10");
+
+
+
+}
+
+
+const removeStyle = (card) => {
+
+    if (card.currentTarget) card = card.currentTarget;
+    card.removeEventListener('transitionend', removeStyle); 
+
+    // card.style.zIndex = "auto";
+
+    card.firstElementChild.firstElementChild.style = "";
+    card.firstElementChild.lastElementChild.style = "";
+
+}
+
+
+const setZIndex = () => {
+
+    let cards = document.querySelectorAll('.card-wrap');
+
+
+    let index = -37748736;
+
+    for (let i = deckSize - 1;  i >= pyramidSize; i--) {
+
+        if (cards[i].classList.contains("hidden")) continue;
+
+        cards[i].style.zIndex = index;
+
+        index /= 2;
+
+        console.log("z-index");
+
+    }
+
+    for (let i = pyramidSize;  i < deckSize - 1; i++) {
+
+        if (cards[i].classList.contains("hidden")) continue;
+
+        cards[i].style.zIndex = -1;
+
+        break;
+    }
+}
+
+
+const refillPyramid = () => {
+
+    let interval = 0.05;
+    let duration = 0.5;
+
+    let delay = 0;
+
+    let index = 100000000;
+
+    let cards = document.querySelectorAll('.card-wrap');
+
+    let cells = document.querySelectorAll('.cell');
+
+    let topCell = cells[0];
+
+    let offset = window.innerHeight - topCell.parentNode.parentNode.offsetTop + 100;
+
+    for (let i = 0; i < pyramidSize; i++) {
+
+        if (!cards[i].classList.contains("hidden")) continue;
+
+        delay += interval;
+
+        let card = cards[i];
+
+        card.classList.remove("hidden");
+
+
+        card.style.left = topCell.offsetLeft + "px";
+
+        card.style.top = topCell.offsetTop +  offset + "px";
+
+        let cell = cells[i];
+
+        let offsetLeft = cell.offsetLeft - card.offsetLeft;
+
+        let offsetTop = cell.offsetTop - card.offsetTop;
+
+        card.querySelectorAll(".front, .back").forEach(card => {
+
+            card.style.transition = `all ${duration - 0.2}s ${delay + 0.2}s linear`;
+        })
+
+        card.style.zIndex = index;
+
+        index += 100000000;
+
+        // card.style.zIndex = 100000000;
+
+
+        // card.classList.add("index10");
+
+        card.addEventListener('transitionend', removeZIndex); 
+
+
+
+        card.style.transition = `all ${duration}s ${delay}s linear, opacity 0s linear`;
+
+        card.style.opacity = 1;
+
+        card.classList.toggle("flip");
+
+        card.style.transform = `translate(${offsetLeft - 2}px, ${offsetTop}px)`;
+    }
+
+
+    delay += duration / 3;
+
+    // let zIndex = 0;
+
+    // for (let i = deckSize - 1;  i >= pyramidSize; i--) {
+
+    //     if (cards[i].classList.contains("hidden")) continue;
+
+    //     cards[i].style.zIndex = zIndex;
+
+    //     zIndex++;
+
+    // }
+
+
+    let stockCell = document.querySelector(".stock");
+
+
+    for (let i = pyramidSize; i < deckSize - 1; i++) {
+
+
+        if (cards[i].classList.contains("hidden")) {
+
+            delay += interval;
+
+            let card = cards[i];
+
+            card.classList.remove("hidden");
+
+            // card.addEventListener('transitionend', removeZIndex); 
+
+            card.style.left = topCell.offsetLeft + "px";
+
+            card.style.top = topCell.offsetTop +  offset + "px";
+
+            let offsetLeft = stockCell.offsetLeft - card.offsetLeft;
+
+            let offsetTop = stockCell.offsetTop - card.offsetTop;
+
+            // card.style.zIndex = 100000000;
+
+            card.style.transition = `all ${duration}s ${delay}s linear, opacity 0s linear`;
+
+            card.style.opacity = 1;
+
+            card.style.transform = `translate(${offsetLeft + 2}px, ${offsetTop}px)`;            
+            
+            continue;
+        };
+
+        delay += interval;
+
+        let card = cards[i];
+
+        // zIndex = zIndex * 3;
+
+        // card.style.zIndex = zIndex;
+
+        card.addEventListener('transitionend', removeStyle); 
+
+        let offsetLeft = stockCell.offsetLeft - card.offsetLeft;
+
+        let offsetTop = stockCell.offsetTop - card.offsetTop;
+
+
+        console.log(offsetLeft, offsetTop);
+
+        card.style.zIndex = 0;
+
+        // card.querySelector(".card").classList.add("zoom");
+
+        card.querySelectorAll(".front, .back").forEach(card => {
+
+            card.style.transition = `all ${duration}s ${delay}s ease-in-out`;
+        });
+
+        card.style.transition = `all ${duration}s ${delay}s ease-in-out`;
+
+        card.classList.toggle("flip");
+
+        card.style.transform = `translate(${offsetLeft + 2}px, ${offsetTop}px)`;
+       
+    }
+
+
+    if (cards[cards.length - 1].classList.contains("hidden")) {
+
+        let pileCell = document.querySelector(".pile");
+
+        delay += interval;
+
+        let card = cards[cards.length - 1];
+
+        card.classList.remove("hidden");
+
+        // card.addEventListener('transitionend', removeZIndex); 
+
+        card.style.left = topCell.offsetLeft + "px";
+
+        card.style.top = topCell.offsetTop +  offset + "px";
+
+        let offsetLeft = pileCell.offsetLeft - card.offsetLeft;
+
+        let offsetTop = pileCell.offsetTop - card.offsetTop;
+
+        card.querySelectorAll(".front, .back").forEach(card => {
+
+            card.style.transition = `all ${duration - 0.2}s ${delay + 0.2}s linear`;
+    
+        })
+        card.style.transition = `all ${duration}s ${delay}s linear, opacity 0s linear`;
+
+        card.style.opacity = 1;
+
+        card.classList.toggle("flip");
+
+        card.style.transform = `translate(${offsetLeft - 2}px, ${offsetTop}px)`;           
+
+    }
+
+
+    // setTimeout(() => {
+
+    //     cards[cards.length - 1].style.zIndex = 0;
+            
+    // }, (delay - 0.5) * 1000)
+
+
+    setTimeout(enableTouch, (delay + duration) * 1000);
+
+}
+
+
+const clearBoard3 = () => {
+
+    zIndex(0);
+
+    disableTouch();
+
+    if (touchScreen()){
+        document.removeEventListener("touchstart", clearBoard3);
+    } else {
+        document.removeEventListener("mousedown", clearBoard3);
+    }
+
+    let cards = document.querySelectorAll('.card-wrap:not(.hidden)');
+
+    cards.forEach(card => {
+
+        // card.style.zIndex = 0;
+
+
+        let front = card.querySelector('.front');
+        front.style.transition = "all 1s linear";
+        front.children[0].style.transition = "all 1s linear";
+        front.children[1].style.transition = "all 1s linear";
+    });
+
+    cards.forEach(card => {
+
+        let front = card.querySelector('.front');
+        front.style.background = "white";
+        front.children[0].style.opacity = 1;
+        front.children[1].style.opacity = 1;
+
+    });
+
+    // document.querySelectorAll('.hidden').forEach(card => {
+    //     resetCard(card);
+    // });
+
+    // setTimeout(removePile, 1000);
+
+    setTimeout(refillPyramid, 1000);
+
+
+    // setTimeout(setZIndex, 2000);
 
 
 }
@@ -356,12 +677,14 @@ const gameOver = () => {
 
     });
 
+    disableTouch();
+
     setTimeout(() => {
 
         if (touchScreen()){
-            document.addEventListener("touchstart", clearBoard);
+            document.addEventListener("touchstart", clearBoard3);
         } else {
-            document.addEventListener("mousedown", clearBoard);
+            document.addEventListener("mousedown", clearBoard3);
         }
 
     }, 1000);
@@ -381,7 +704,9 @@ const lost = () => {
 
     let openCards = [];
 
-    let flippedCards = document.querySelectorAll('.flip');
+    let flippedCards = document.querySelectorAll('.flip, .hidden');
+
+    console.log(flippedCards.length);
 
     if (flippedCards.length < deckSize) return false;
 
@@ -465,7 +790,7 @@ const checkPairs = (card) => {
 
     if (rank1 == "K") {
         removeCard(card);
-        if (win()) {repeat = false; setTimeout(resetGame, 1000); return}
+        if (win()) {repeat = false; setTimeout(resetGame, 600); return}
         if (lost()) {setTimeout(gameOver, 500); return}
         return;
     }
@@ -497,7 +822,7 @@ const checkPairs = (card) => {
             removeCard(card);
             removeCard(cards[i]);
 
-            if (win()) {repeat = false; setTimeout(resetGame, 1000); return}
+            if (win()) {repeat = false; setTimeout(resetGame, 600); return}
             if (lost()) {setTimeout(gameOver, 500); return}
 
             return;
@@ -513,7 +838,7 @@ const checkPairs = (card) => {
         removeCard(card);
         removeCard(topPile);
 
-        if (win()) {repeat = false; setTimeout(resetGame, 1000); return}
+        if (win()) {repeat = false; setTimeout(resetGame, 600); return}
         if (lost()) {setTimeout(gameOver, 500); return}
 
     }
@@ -537,9 +862,13 @@ const drawCard = (card) => {
 
     let offsetTop = pileCell.offsetTop - card.offsetTop;
 
+
+    console.log(offsetLeft, offsetTop);
+
+
     card.style.zIndex = zIndex();
 
-    console.log(card);
+    // console.log(card);
 
     card.querySelector(".card").classList.add("zoom");
 
@@ -586,7 +915,7 @@ const fillPyramid = (topCell, cards, offset, delay, interval) => {
 
         // let duration = distance / 550 / 2;
 
-        duration = 0.5;
+        let duration = 0.5;
 
         card.querySelectorAll(".front, .back").forEach(card => {
 
@@ -627,7 +956,7 @@ const fillStock = (topCell, cards, offset, delay, interval) => {
 
         // let duration = distance / 550 / 1.1;
 
-        duration = 0.5;
+        let duration = 0.5;
 
         card.style.transition = `all ${duration}s ${delay}s linear, opacity 0s linear`;
 
@@ -652,7 +981,7 @@ const fillPile = (topCell, cards, offset, delay, interval) => {
 
     let offsetTop = pileCell.offsetTop - card.offsetTop;
 
-    duration = 0.5;
+    let duration = 0.5;
 
     // delay += interval;
 
@@ -665,6 +994,8 @@ const fillPile = (topCell, cards, offset, delay, interval) => {
     card.style.transition = `all ${duration}s ${delay}s linear, opacity 0s linear`;
 
     card.style.opacity = 1;
+
+    card.style.zIndex = 1;
 
     card.classList.toggle("flip");
 
@@ -807,6 +1138,8 @@ const enableCard = (card) => {
 
     card.removeEventListener('transitionend', enableCard); 
 
+    card.firstElementChild.classList.remove("zoom");
+
     disableClickThrough(card);
     
     // card.style.pointerEvents = "none";
@@ -908,6 +1241,24 @@ const getDeck = () => {
     })
 }
 
+const resetCard = (card) => {
+
+    if (card.currentTarget) card = card.currentTarget;
+
+    card.removeEventListener('transitionend', resetCard); 
+
+    card.style = "";
+    card.className = "card-wrap hidden";
+    card.firstElementChild.style = "";
+    card.firstElementChild.className = "card";
+    card.firstElementChild.firstElementChild.style = "";
+    card.firstElementChild.firstElementChild.firstElementChild.style = "";
+    card.firstElementChild.firstElementChild.lastElementChild.style = "";
+    card.firstElementChild.lastElementChild.style = "";
+
+
+}
+
 const resetCards = () => {
 
     zIndex(0);
@@ -916,14 +1267,8 @@ const resetCards = () => {
 
     cards.forEach(card => {
 
-        card.style = "";
-        card.className = "card-wrap";
-        card.firstElementChild.style = "";
-        card.firstElementChild.className = "card";
-        card.firstElementChild.firstElementChild.style = "";
-        card.firstElementChild.firstElementChild.firstElementChild.style = "";
-        card.firstElementChild.firstElementChild.lastElementChild.style = "";
-        card.firstElementChild.lastElementChild.style = "";
+        card.classList.remove("hidden");
+        card.firstElementChild.firstElementChild.classList.remove("red");
     })
 }
 
@@ -941,7 +1286,13 @@ const setCards = () => {
         let suit = cards[i].length == 2 ? cards[i][1] : cards[i][2];
 
         if (suit == "♥" || suit == "♦") { 
-            card.style.color = "red";
+            // card.style.color = "red";
+
+
+            card.classList.add("red");
+
+
+            // card.parentElement.parentElement.style.color = "red";
         }
 
         card.querySelector(".rank").innerText = rank;
@@ -981,6 +1332,8 @@ const disableTouchMove = () => {
 }
 
 const init = () => {
+
+        disableTouch();
 
 
         disableTouchMove();
