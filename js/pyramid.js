@@ -381,7 +381,7 @@ const setZIndex = () => {
 }
 
 
-const refillPyramid = () => {
+const refillBoard = () => {
 
     let interval = 0.05;
     let duration = 0.5;
@@ -620,7 +620,7 @@ const clearBoard3 = () => {
 
     // setTimeout(removePile, 1000);
 
-    setTimeout(refillPyramid, 1000);
+    setTimeout(refillBoard, 1000);
 
 
     // setTimeout(setZIndex, 2000);
@@ -628,10 +628,22 @@ const clearBoard3 = () => {
 
 }
 
+const designedShow = () => {
+
+    document.querySelector("#designed").classList.add("disinged-show");
+
+}
+
 const resetGame = () => {
 
     resetCards();
-    setTimeout(init, 1000);
+
+    setTimeout(designedShow, 1500);
+
+    setTimeout(() => {
+        document.querySelector("#designed").classList.remove("disinged-show");
+        init()
+    }, 8000);
 }
 
 const gameOver = () => {
@@ -888,6 +900,66 @@ const drawCard = (card) => {
     if (lost()) setTimeout(gameOver, 500);
 }
 
+// const fillPyramid = (topCell, cards, offset, delay, interval) => {
+
+//     for (let i = 0; i < pyramidSize; i++) {
+
+//         delay += interval;
+
+//         let card = cards[i];
+
+//         let cell = document.querySelectorAll(".cell")[i];
+
+//         card.style.left = cell.offsetLeft + "px";
+
+//         card.style.top = cell.offsetTop + "px";
+
+//         startLeft = topCell.offsetLeft;
+        
+//         startTop = topCell.offsetTop +  offset;
+
+//         let offsetLeft = startLeft - card.offsetLeft;
+
+//         let offsetTop = startTop - card.offsetTop;
+
+
+//         console.log(card.offsetLeft, card.offsetTop);
+
+//         console.log(startLeft, startTop);
+
+//         console.log(offsetLeft, offsetTop);
+
+//         let duration = 0.5;
+
+
+//         card.style.transition = `all ${0}s ${0}s linear, opacity 0s linear`;
+
+//         // card.style.transition = `all ${duration}s ${delay}s linear, opacity 0s linear`;
+
+
+
+
+//         card.style.transform = `translate(${offsetLeft - 2}px, ${offsetTop}px)`;
+
+
+
+//         card.querySelectorAll(".front, .back").forEach(card => {
+
+//             card.style.transition = `all ${duration - 0.2}s ${delay + 0.2}s linear`;
+
+//         })
+
+//         card.style.transition = `all ${duration}s ${delay}s linear, opacity 0s linear`;
+
+//         card.style.opacity = 1;
+
+
+//         card.classList.toggle("flip");
+
+//         card.style.transform = `translate(0px, 0px)`;
+//     }
+// }
+
 const fillPyramid = (topCell, cards, offset, delay, interval) => {
 
     for (let i = 0; i < pyramidSize; i++) {
@@ -899,11 +971,6 @@ const fillPyramid = (topCell, cards, offset, delay, interval) => {
         card.style.left = topCell.offsetLeft + "px";
 
         card.style.top = topCell.offsetTop +  offset + "px";
-
-        // card.style.top = topCell.offsetTop +  550 + "px";
-
-
-        // console.log(card.style.top);
 
         let cell = document.querySelectorAll(".cell")[i];
 
@@ -1046,6 +1113,10 @@ const setBoard = () => {
 
     let offset = window.innerHeight - topCell.parentNode.parentNode.offsetTop + 100;
 
+
+    // let offset = window.innerHeight - topCell.parentNode.parentNode.offsetTop;
+
+
     // console.log(offset);
 
     // if (window.innerHeight > window.innerWidth) {
@@ -1062,13 +1133,6 @@ const setBoard = () => {
 
     fillPyramid(topCell, cards, offset, delay, interval);
 
-    // delay = pyramidSize * interval; 
-
-    // fillStock(topCell, cards, delay, interval);
-
-    // delay = (deckSize) * interval;
-
-    // fillPile(topCell, cards, delay, interval);
 
     delay = pyramidSize * interval; 
 

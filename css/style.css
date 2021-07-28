@@ -26,9 +26,9 @@
 }
 
 body{
-    /* font-family: 'Roboto Slab', serif; */
+    font-family: 'Roboto', sans-serif;
 
-    font-family: "Hiragino Sans W6";
+    /* font-family: "Hiragino Sans W6"; */
 
     background: var(--background-color);
 
@@ -279,6 +279,39 @@ img{
     /* display: none; */
 }
 
+#designed{
+    position: absolute;
+    width: 100%;
+    top: calc(var(--board-height) / 2);
+    font-size: 4.0vmin;
+    text-align: center;
+    align-self: auto;
+    opacity: 0;
+    /* transition: opacity 1s; */
+    color: white;
+}
+
+@keyframes designed-anime{
+    0% {
+        opacity: 0;
+    }
+
+    /* 80% {
+        opacity: 1;
+    } */
+
+    100% {
+        opacity: 1;
+    }
+}
+
+
+.disinged-show{
+
+    animation: designed-anime 3.0s 2 ease-in-out forwards alternate;
+
+}
+
 @keyframes scaling {
     0% {
         transform: scale(1.0);
@@ -364,6 +397,10 @@ img{
         margin-top: calc(var(--card-width) * 0.00);;
         width: calc(var(--card-width) * 0.75);
         height: calc(var(--card-width) * 0.75);
+    }
+
+    #designed{
+        font-size: 3.0vmin;
     }
 }
 
