@@ -660,6 +660,8 @@ const gameOver = () => {
 
         let front = card.querySelector('.front');
 
+        card.style.transform = card.style.transform.replace("scale(1.1)", "");
+
         // let color = window.getComputedStyle(front).getPropertyValue('color');
 
         // console.log(color);
