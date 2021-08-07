@@ -33,6 +33,7 @@ body{
     background: var(--background-color);
 
     /* background-image: url("../images/background.jpg"); */
+
 }
 
 #outer {
@@ -95,6 +96,7 @@ body{
 .card-wrap{
     position: absolute;
     opacity: 0;
+
 
     /* pointer-events: none; */
 }
@@ -228,6 +230,7 @@ img{
         white 0%,
         white 100%);
     background-clip: content-box, padding-box;
+
 }
 
 .cell{
@@ -242,6 +245,7 @@ img{
     border-radius: 4px;
 
     opacity: 0;
+
 }
 
 .stock {

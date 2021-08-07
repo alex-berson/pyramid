@@ -899,7 +899,7 @@ const drawCard = (card) => {
     // card.style.transform += 'scale(1.1)';
 
 
-    if (lost()) setTimeout(gameOver, 500);
+    if (lost()) setTimeout(gameOver, 600);
 }
 
 // const fillPyramid = (topCell, cards, offset, delay, interval) => {
@@ -1393,16 +1393,45 @@ const setCards = () => {
 const disableTouchMove = () => {
 
     const preventDefault = (e) => e.preventDefault();
-
     document.body.addEventListener('touchmove', preventDefault, { passive: false });
 }
+
+const disableDoubleTouchZoom = () => {
+
+    const preventDefault = (e) => e.preventDefault();
+    document.body.addEventListener('touchstart', preventDefault, { passive: false });
+}
+
+// const disableCells = () => {
+
+//     const preventDefault = (e) => e.preventDefault();
+
+
+//     document.querySelectorAll(".cell").forEach(cell => {
+
+//         cell.addEventListener('touchstart', preventDefault, { passive: false });
+
+//     })
+
+//     let pile = document.querySelectorAll(".pile");
+
+//     let stock = document.querySelectorAll(".stock");
+
+//     document.body.addEventListener('touchstart', preventDefault, { passive: false });
+
+
+// }
 
 const init = () => {
 
         disableTouch();
 
+        // disableCells();
+
 
         disableTouchMove();
+
+        disableDoubleTouchZoom();
 
         setBoard();
 
