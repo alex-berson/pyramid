@@ -1094,9 +1094,33 @@ const setBoardSize = () => {
     // console.log(boardSize);
 }
 
+const setCardsSize = () => {
+
+    // let boardSize = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--board-size'));
+
+    // console.log(boardSize);
+
+
+    // console.log(window.innerWidth);
+
+
+    if (window.innerHeight > window.innerWidth) {
+            document.documentElement.style.setProperty('--card-width', Math.floor(window.innerWidth *  0.97 / 7 * 0.88) + 'px');
+        } else {
+            document.documentElement.style.setProperty('--card-width', Math.floor(window.innerHeight *  0.97 / 7 * 0.88) + 'px');
+    }
+
+    // console.log(Math.floor(window.innerWidth *  0.97 / 7 * 8.88));
+
+
+    // boardSize = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--board-width'));
+
+    // console.log(boardSize);
+}
+
 const setBoard = () => {
 
-    // setBoardSize();
+    setCardsSize();
 
     setCards();
 
@@ -1127,7 +1151,7 @@ const setBoard = () => {
     //     offset = window.innerH - topCell.parentNode.parentNode.offsetTop;
     // }
 
-    // setTimeout(() => {
+    setTimeout(() => {
 
     let delay = 0;
 
@@ -1145,7 +1169,7 @@ const setBoard = () => {
     fillStock(topCell, cards, offset, delay, interval);
 
 
-    // }, 0);
+    }, 1000);
 
 }
 
@@ -1424,14 +1448,16 @@ const disableDoubleTouchZoom = () => {
 
 const init = () => {
 
+        // setCardSize();
+
         disableTouch();
 
         // disableCells();
 
 
-        disableTouchMove();
+        // disableTouchMove();
 
-        disableDoubleTouchZoom();
+        // disableDoubleTouchZoom();
 
         setBoard();
 

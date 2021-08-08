@@ -1,6 +1,5 @@
 :root{
     --duration: 0.5s;
-    --flip-direction: -1;
 }
 
 .card-wrap {
@@ -24,21 +23,25 @@
 }
 
 .card-wrap:hover .card-wrap:active .back, .card-wrap.hover .back, .card-wrap.flip .back {
-    -webkit-transform: rotateY(calc(180deg * var(--flip-direction)));
-    -moz-transform: rotateY(calc(180deg * var(--flip-direction)));
-    -o-transform: rotateY(calc(180deg * var(--flip-direction)));
-    transform: rotateY(calc(180deg * var(--flip-direction)));
+    -webkit-transform: rotateY(-180deg);
+    -moz-transform: rotateY(-180deg);
+    -o-transform: rotateY(-180deg);
+    transform: rotateY(-180deg);
 } 
 
 .card-wrap, .front{
-    width: calc(var(--card-width) + 2px);
-    height: calc(var(--card-height) + 2px);
+    /* width: calc(var(--card-width) + 2px); */
+    /* height: calc(var(--card-height) + 2px); */
+
+    /* width: calc(var(--card-width));
+    height: calc(var(--card-height)); */
 }
 
 .back{
-    width: calc(var(--card-width));
-    height: calc(var(--card-height));
+    /* width: calc(var(--card-width));
+    height: calc(var(--card-height)); */
 }
+
 
 .card {
     -webkit-transition: var(--duration) ease-in-out;
@@ -94,9 +97,9 @@
 }
 
 .front {
-    -webkit-transform: rotateY(calc(-180deg * var(--flip-direction)));
-    -moz-transform: rotateY(calc(-180deg * var(--flip-direction)));
-    -o-transform: rotateY(calc(-180deg * var(--flip-direction)));
-    -ms-transform: rotateY(calc(-180deg * var(--flip-direction)));
-    transform: rotateY(calc(-180deg * var(--flip-direction)));
+    -webkit-transform: rotateY(180deg);
+    -moz-transform: rotateY(180deg);
+    -o-transform: rotateY(180deg);
+    -ms-transform: rotateY(180deg);
+    transform: rotateY(180deg);
 }
