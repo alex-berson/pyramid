@@ -1,8 +1,8 @@
 # Pyramid
 
-Clear the entire game table by removing pairs of cards that add up to 13.<br> 
+Clear the game table by removing pairs of cards that add up to 13.<br> 
 You can play [Pyramid online](https://alex-berson.github.io/pyramid/) or <br>
-[<img src="images/Download_on_the_App_Store_Badge_US-UK_RGB_blk_092917.svg">](https://apps.apple.com/us/app/)
+[<img src="images/Download_on_the_App_Store_Badge_US-UK_RGB_blk_092917.svg">](https://apps.apple.com/us/app/pyramid/id1581234549)
 
 ## Description
 

@@ -30,18 +30,14 @@
 } 
 
 .card-wrap, .front{
-    /* width: calc(var(--card-width) + 2px); */
-    /* height: calc(var(--card-height) + 2px); */
-
-    /* width: calc(var(--card-width));
-    height: calc(var(--card-height)); */
+    width: calc(var(--card-width));
+    height: calc(var(--card-height));
 }
 
 .back{
-    /* width: calc(var(--card-width));
-    height: calc(var(--card-height)); */
+    width: calc(var(--card-width));
+    height: calc(var(--card-height));
 }
-
 
 .card {
     -webkit-transition: var(--duration) ease-in-out;
