@@ -3,6 +3,7 @@ const files = [
   'https://alex-berson.github.io/pyramid/',
   'index.html',
   'css/style.css',
+  'css/flip.css',
   'js/pyramid.js',
   'js/decks.js',
   'images/suits/hearts.png',

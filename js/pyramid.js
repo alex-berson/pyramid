@@ -5,6 +5,31 @@ const suits = {
     "♦": "diamonds",
     "♠": "spades",
     "♣": "clubs",
+} 
+
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('service-worker.js')
+            .then(reg => {
+                console.log('Service worker registered!', reg);
+            })
+            .catch(err => {
+                console.log('Service worker registration failed: ', err);
+            });
+    });
+} 
+
+const touchScreen = () => matchMedia('(hover: none)').matches;
+
+const safari = () => {
+
+    let userAgent = window.navigator.userAgent.toLowerCase(),
+    sfri = /safari/.test(userAgent),
+    ios = /iphone|ipod|ipad/.test(userAgent);
+
+    if (sfri) return true;
+     
+    return false;
 }
 
 const zIndex = () => {
@@ -40,9 +65,9 @@ const clickThrough = (e) => {
     if (!clickThrough.y) clickThrough.y = 0;
 
     if (e.type == "touchstart") {
-       
-        clickThrough.x = e.touches[0].clientX;
-        clickThrough.y = e.touches[0].clientY;
+
+        clickThrough.x = e.touches[e.touches.length - 1].clientX;
+        clickThrough.y = e.touches[e.touches.length -1].clientY;
 
         divStack = document.elementsFromPoint(clickThrough.x, clickThrough.y);
 
@@ -158,7 +183,7 @@ const refillPyramid = (topCell, cards, offset, delay, interval, duration) => {
         zIndex += 100000000;
 
         card.querySelectorAll(".front, .back").forEach(card => {
-            card.style.transition = `all ${duration - 0.2}s ${delay + 0.2}s linear`;
+            card.style.transition = `all ${duration - 0.1}s ${delay + 0.1}s linear`;
         })
 
         card.addEventListener('transitionend', removeZIndex); 
@@ -257,10 +282,11 @@ const resetTable = () => {
     let delay = 0;
     let topCell = document.querySelector(".cell");
     let cards = document.querySelectorAll('.card-wrap');
-    let offset = window.innerHeight - topCell.parentNode.parentNode.offsetTop + 100;
+    let offsetPlus = safari() ? 10 : 50;
+    let offset = window.innerHeight - topCell.parentNode.parentNode.offsetTop + offsetPlus;
 
-    delay = refillPyramid(topCell, cards, offset, delay, interval, duration);
     delay = refillStock(topCell, cards, offset, delay, interval, duration);
+    delay = refillPyramid(topCell, cards, offset, delay, interval, duration);
     delay  = refillPile(topCell, cards, offset, delay, interval, duration);
 
     setTimeout(enableCards, (delay + duration) * 1000);
@@ -280,9 +306,9 @@ const awakeGame = () => {
 
     cards.forEach(card => {
         let front = card.querySelector('.front');
-        front.style.transition = "all 1s linear";
-        front.firstElementChild.style.transition = "all 1s linear";
-        front.lastElementChild.style.transition = "all 1s linear";
+        front.style.transition = "all 0s linear";
+        front.firstElementChild.style.transition = "all 0s linear";
+        front.lastElementChild.style.transition = "all 0s linear";
     });
 
     cards.forEach(card => {
@@ -292,20 +318,19 @@ const awakeGame = () => {
         front.lastElementChild.style.opacity = 1;
     });
 
-    setTimeout(resetTable, 1000);
+    setTimeout(resetTable, 100);
 }
 
-const designedShow = () => {
-    document.querySelector("#designed").classList.add("show");
-}
+const designedShow = () => document.querySelector("#designed").classList.add("show");
 
 const resetGame = () => {
+
     resetCards();
     setTimeout(designedShow, 1000);
     setTimeout(() => {
         document.querySelector("#designed").classList.remove("show");
         init()
-    }, 7000);
+    }, 6500);
 }
 
 const gameOver = () => {
@@ -317,18 +342,18 @@ const gameOver = () => {
         let front = card.querySelector('.front');
 
         card.style.transform = card.style.transform.replace("scale(1.1)", "");
-        front.style.transition = "all 1s linear";
-        front.firstElementChild.style.transition = "all 1s linear";
-        front.lastElementChild.style.transition = "all 1s linear";
+        front.style.transition = "all 0.5s linear";
+        front.firstElementChild.style.transition = "all 0.5s linear";
+        front.lastElementChild.style.transition = "all 0.5s linear";
     });
 
     cards.forEach(card => {
 
         let front = card.querySelector('.front');
 
-        front.style.background = "gainsboro";
-        front.firstElementChild.style.opacity = 0.7;
-        front.lastElementChild.style.opacity = 0.7;
+        front.style.background = "rgb(200,200,200)";
+        front.firstElementChild.style.opacity = 0.6;
+        front.lastElementChild.style.opacity = 0.6;
     });
 
     disableCards();
@@ -341,7 +366,7 @@ const gameOver = () => {
             document.addEventListener("mousedown", awakeGame);
         }
 
-    }, 1000);
+    }, 500);
 }
 
 const win = () => {
@@ -513,7 +538,7 @@ const fillPyramid = (topCell, cards, offset, delay, interval, duration) => {
         let offsetTop = cell.offsetTop - card.offsetTop;
 
         card.querySelectorAll(".front, .back").forEach(card => {
-            card.style.transition = `all ${duration - 0.2}s ${delay + 0.2}s linear`;
+            card.style.transition = `all ${duration - 0.1}s ${delay + 0.1}s linear`;
         });
 
         card.style.transition = `all ${duration}s ${delay}s linear, opacity 0s linear`;
@@ -521,6 +546,8 @@ const fillPyramid = (topCell, cards, offset, delay, interval, duration) => {
         card.classList.toggle("flip");
         card.style.transform = `translate(${offsetLeft - 2}px, ${offsetTop}px)`;
     }
+
+    return delay;
 }
 
 const fillStock = (topCell, cards, offset, delay, interval, duration) => {
@@ -543,9 +570,13 @@ const fillStock = (topCell, cards, offset, delay, interval, duration) => {
         card.style.opacity = 1;
         card.style.transform = `translate(${offsetLeft - 2}px, ${offsetTop}px)`;
     }
+
+    return delay;
 }
 
 const fillPile = (topCell, cards, offset, delay, interval, duration) => {
+
+    delay += interval
 
     let pileCell = document.querySelector(".pile");
     let card = cards[deckSize - 1];
@@ -565,6 +596,8 @@ const fillPile = (topCell, cards, offset, delay, interval, duration) => {
     card.style.zIndex = 1;
     card.classList.toggle("flip");
     card.style.transform = `translate(${offsetLeft - 2}px, ${offsetTop}px)`;
+
+    return delay;
 }
 
 const setCardsSize = () => {
@@ -573,6 +606,12 @@ const setCardsSize = () => {
             document.documentElement.style.setProperty('--cell-width', Math.floor(window.innerWidth *  0.97 / 7 * 0.88) + 'px');
         } else {
             document.documentElement.style.setProperty('--cell-width', Math.floor(window.innerHeight *  0.97 / 7 * 0.88) + 'px');
+    }
+
+    if (window.innerHeight > window.innerWidth) {
+        document.documentElement.style.setProperty('--card-width', Math.floor(window.innerWidth *  0.97 / 7 * 0.86) + 'px');
+    } else {
+        document.documentElement.style.setProperty('--card-width', Math.floor(window.innerHeight *  0.97 / 7 * 0.86) + 'px');
     }
 }
 
@@ -583,25 +622,22 @@ const setTable = () => {
 
     let topCell = document.querySelector(".cell");
     let cards =  document.querySelectorAll(".card-wrap");
-    let offset = window.innerHeight - topCell.parentNode.parentNode.offsetTop + 100;
 
     setTimeout(() => {
+
+        let offsetPlus = safari() ? 10 : 50;
+        let offset = window.innerHeight - topCell.parentNode.parentNode.offsetTop + offsetPlus;
 
         let delay = 0;
         let interval = 0.05;
         let duration = 0.5;
 
-        fillPyramid(topCell, cards, offset, delay, interval, duration);
-
-        delay = pyramidSize * interval; 
-
-        fillPile(topCell, cards, offset, delay, interval, duration);
-
-        delay = pyramidSize * interval + interval;
+        delay = fillPyramid(topCell, cards, offset, delay, interval, duration);
+        delay = fillPile(topCell, cards, offset, delay, interval, duration);
 
         fillStock(topCell, cards, offset, delay, interval, duration);
 
-    }, 100);
+    }, 500);
 }
 
 const zoom = (card) => {
@@ -631,10 +667,6 @@ const turn = (e) => {
     }
 }
 
-const touchScreen = () => {
-    return matchMedia('(hover: none)').matches;
-}
-
 const enableCard = (card) => {
 
     card = card.currentTarget ? card.currentTarget : card;
@@ -646,11 +678,11 @@ const enableCard = (card) => {
     if (touchScreen()){
         card.addEventListener("touchstart", turn);
         card.addEventListener("touchend", removeZoom);
+        card.addEventListener("touchcancel", removeZoom);
     } else {
         card.addEventListener("mousedown", turn);
         card.addEventListener("mouseup", removeZoom);
         card.addEventListener("mouseleave", removeZoom);
-
     }
 }
 
@@ -664,6 +696,7 @@ const disableCard = (card) => {
     if (touchScreen()){
         card.removeEventListener("touchstart", turn);
         card.removeEventListener("touchend", removeZoom);
+        card.removeEventListener("touchcancel", removeZoom);
     } else {
         card.removeEventListener("mousedown", turn);
         card.removeEventListener("mouseup", removeZoom);
@@ -802,14 +835,12 @@ const init = () => {
     disableCards();
 
     setTable();
-    
-    setTimeout(() => {
-        enableCards();
-    }, 3200);    
+
+    setTimeout(enableCards, 3700);    
 }
 
 window.onload = () => {
     document.fonts.ready.then(() => {
-        init();     
+        init(); 
     });
 }
