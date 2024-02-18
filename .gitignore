@@ -1,4 +1,3 @@
 js/solver.js
 js/preview.js
-js/decks1.js
-js/moves.js
+js/convertor.mjs

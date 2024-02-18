@@ -1,17 +1,16 @@
-const cacheName = 'cache-v1';
+const cacheName = 'cache-v3';
 const files = [
-  'https://alex-berson.github.io/pyramid/',
+  '/',
   'index.html',
   'css/style.css',
-  'css/flip.css',
   'js/pyramid.js',
-  'js/decks.js',
-  'images/suits/hearts.png',
-  'images/suits/diamonds.png',
-  'images/suits/spades.png',
-  'images/suits/clubs.png',
-  'fonts/Roboto-Regular-webfont.woff',
-  'fonts/Roboto-Bold-webfont.woff'
+  'js/data.js',
+  'images/suits/heart.svg',
+  'images/suits/diamond.svg',
+  'images/suits/spade.svg',
+  'images/suits/club.svg',
+  'fonts/roboto-regular.woff',
+  'fonts/roboto-bold.woff'
 ];
 
 self.addEventListener('install', event => {

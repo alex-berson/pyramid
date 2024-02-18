@@ -3,8 +3,9 @@
    "short_name": "Pyramid",
    "start_url": "index.html",
    "display": "standalone",
-   "background_color": "#214f11",
-   "theme_color": "#ffffff",
+   "orientation":  "portrait",
+   "background_color": "#005000",
+   "theme_color": "#005000",
    "icons": [{
       "src": "images/icons/android-chrome-192x192.png",
       "sizes": "192x192",
